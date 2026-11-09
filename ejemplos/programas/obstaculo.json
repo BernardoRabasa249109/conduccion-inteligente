@@ -1,0 +1,467 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Detenerse ante un obstáculo",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_forever",
+          "id": "h5c",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "controls_if",
+                "id": "b5b",
+                "extraState": {
+                  "elseIfCount": 0,
+                  "hasElse": true
+                },
+                "inputs": {
+                  "IF0": {
+                    "block": {
+                      "type": "tp_obstacle",
+                      "id": "b4b",
+                      "inputs": {
+                        "LIMIT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "s4c",
+                            "fields": {
+                              "NUM": 15
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "DO0": {
+                    "block": {
+                      "type": "tp_stop",
+                      "id": "b4d",
+                      "next": {
+                        "block": {
+                          "type": "tp_decide",
+                          "id": "b4l",
+                          "inputs": {
+                            "TEXT": {
+                              "block": {
+                                "type": "tp_join",
+                                "id": "b4i",
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_join",
+                                      "id": "b4f",
+                                      "inputs": {
+                                        "A": {
+                                          "shadow": {
+                                            "type": "text",
+                                            "id": "s4g",
+                                            "fields": {
+                                              "TEXT": "Me detengo: obstáculo a "
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "block": {
+                                            "type": "tp_distance",
+                                            "id": "b4e"
+                                          },
+                                          "shadow": {
+                                            "type": "text",
+                                            "id": "s4h",
+                                            "fields": {
+                                              "TEXT": ""
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s4j",
+                                      "fields": {
+                                        "TEXT": ""
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s4k",
+                                      "fields": {
+                                        "TEXT": " cm"
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "shadow": {
+                                "type": "text",
+                                "id": "s4m",
+                                "fields": {
+                                  "TEXT": ""
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ELSE": {
+                    "block": {
+                      "type": "controls_if",
+                      "id": "b5a",
+                      "extraState": {
+                        "elseIfCount": 2,
+                        "hasElse": true
+                      },
+                      "inputs": {
+                        "IF0": {
+                          "block": {
+                            "type": "logic_operation",
+                            "id": "b4p",
+                            "fields": {
+                              "OP": "AND"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "tp_line",
+                                  "id": "b4n",
+                                  "fields": {
+                                    "SIDE": "L",
+                                    "COLOR": "black"
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "tp_line",
+                                  "id": "b4o",
+                                  "fields": {
+                                    "SIDE": "R",
+                                    "COLOR": "black"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "DO0": {
+                          "block": {
+                            "type": "tp_motors",
+                            "id": "b4q",
+                            "inputs": {
+                              "LEFT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s4r",
+                                  "fields": {
+                                    "NUM": 150
+                                  }
+                                }
+                              },
+                              "RIGHT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s4s",
+                                  "fields": {
+                                    "NUM": 150
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b4t",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s4u",
+                                      "fields": {
+                                        "TEXT": "Los dos sensores ven negro: sigo recto"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "IF1": {
+                          "block": {
+                            "type": "tp_line",
+                            "id": "b4v",
+                            "fields": {
+                              "SIDE": "L",
+                              "COLOR": "black"
+                            }
+                          }
+                        },
+                        "DO1": {
+                          "block": {
+                            "type": "tp_motors",
+                            "id": "b4w",
+                            "inputs": {
+                              "LEFT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s4x",
+                                  "fields": {
+                                    "NUM": 23
+                                  }
+                                }
+                              },
+                              "RIGHT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s4y",
+                                  "fields": {
+                                    "NUM": 150
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b4z",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s50",
+                                      "fields": {
+                                        "TEXT": "La línea está a mi izquierda: giro a la izquierda"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "IF2": {
+                          "block": {
+                            "type": "tp_line",
+                            "id": "b51",
+                            "fields": {
+                              "SIDE": "R",
+                              "COLOR": "black"
+                            }
+                          }
+                        },
+                        "DO2": {
+                          "block": {
+                            "type": "tp_motors",
+                            "id": "b52",
+                            "inputs": {
+                              "LEFT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s53",
+                                  "fields": {
+                                    "NUM": 150
+                                  }
+                                }
+                              },
+                              "RIGHT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s54",
+                                  "fields": {
+                                    "NUM": 23
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b55",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s56",
+                                      "fields": {
+                                        "TEXT": "La línea está a mi derecha: giro a la derecha"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "ELSE": {
+                          "block": {
+                            "type": "tp_stop",
+                            "id": "b57",
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b58",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s59",
+                                      "fields": {
+                                        "TEXT": "No veo la línea: me detengo"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": []
+  },
+  "escenario": {
+    "version": 1,
+    "id": "basica",
+    "name": "Pista básica",
+    "cols": 6,
+    "rows": 4,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "curve",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      }
+    ],
+    "objects": [
+      {
+        "id": "caja-ej",
+        "kind": "obstacle",
+        "shape": "caja",
+        "x": 120,
+        "y": 105,
+        "w": 8,
+        "d": 8,
+        "h": 8,
+        "rot": 0
+      }
+    ],
+    "zones": [],
+    "start": {
+      "x": 40,
+      "y": 105,
+      "heading": 0
+    }
+  }
+}

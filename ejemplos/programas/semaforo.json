@@ -1,0 +1,573 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Respetar el semáforo",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_forever",
+          "id": "h7a",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "controls_if",
+                "id": "b79",
+                "extraState": {
+                  "elseIfCount": 0,
+                  "hasElse": true
+                },
+                "inputs": {
+                  "IF0": {
+                    "block": {
+                      "type": "logic_operation",
+                      "id": "b6h",
+                      "fields": {
+                        "OP": "OR"
+                      },
+                      "inputs": {
+                        "A": {
+                          "block": {
+                            "type": "tp_sign_is",
+                            "id": "b6f",
+                            "fields": {
+                              "LABEL": "semaforo_rojo"
+                            }
+                          }
+                        },
+                        "B": {
+                          "block": {
+                            "type": "tp_sign_is",
+                            "id": "b6g",
+                            "fields": {
+                              "LABEL": "semaforo_amarillo"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "DO0": {
+                    "block": {
+                      "type": "tp_stop",
+                      "id": "b6i",
+                      "next": {
+                        "block": {
+                          "type": "tp_decide",
+                          "id": "b6j",
+                          "inputs": {
+                            "TEXT": {
+                              "shadow": {
+                                "type": "text",
+                                "id": "s6k",
+                                "fields": {
+                                  "TEXT": "Me detengo porque detecté rojo"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ELSE": {
+                    "block": {
+                      "type": "controls_if",
+                      "id": "b78",
+                      "extraState": {
+                        "elseIfCount": 2,
+                        "hasElse": true
+                      },
+                      "inputs": {
+                        "IF0": {
+                          "block": {
+                            "type": "logic_operation",
+                            "id": "b6n",
+                            "fields": {
+                              "OP": "AND"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "tp_line",
+                                  "id": "b6l",
+                                  "fields": {
+                                    "SIDE": "L",
+                                    "COLOR": "black"
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "tp_line",
+                                  "id": "b6m",
+                                  "fields": {
+                                    "SIDE": "R",
+                                    "COLOR": "black"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "DO0": {
+                          "block": {
+                            "type": "tp_motors",
+                            "id": "b6o",
+                            "inputs": {
+                              "LEFT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s6p",
+                                  "fields": {
+                                    "NUM": 150
+                                  }
+                                }
+                              },
+                              "RIGHT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s6q",
+                                  "fields": {
+                                    "NUM": 150
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b6r",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s6s",
+                                      "fields": {
+                                        "TEXT": "Los dos sensores ven negro: sigo recto"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "IF1": {
+                          "block": {
+                            "type": "tp_line",
+                            "id": "b6t",
+                            "fields": {
+                              "SIDE": "L",
+                              "COLOR": "black"
+                            }
+                          }
+                        },
+                        "DO1": {
+                          "block": {
+                            "type": "tp_motors",
+                            "id": "b6u",
+                            "inputs": {
+                              "LEFT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s6v",
+                                  "fields": {
+                                    "NUM": 23
+                                  }
+                                }
+                              },
+                              "RIGHT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s6w",
+                                  "fields": {
+                                    "NUM": 150
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b6x",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s6y",
+                                      "fields": {
+                                        "TEXT": "La línea está a mi izquierda: giro a la izquierda"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "IF2": {
+                          "block": {
+                            "type": "tp_line",
+                            "id": "b6z",
+                            "fields": {
+                              "SIDE": "R",
+                              "COLOR": "black"
+                            }
+                          }
+                        },
+                        "DO2": {
+                          "block": {
+                            "type": "tp_motors",
+                            "id": "b70",
+                            "inputs": {
+                              "LEFT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s71",
+                                  "fields": {
+                                    "NUM": 150
+                                  }
+                                }
+                              },
+                              "RIGHT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s72",
+                                  "fields": {
+                                    "NUM": 23
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b73",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s74",
+                                      "fields": {
+                                        "TEXT": "La línea está a mi derecha: giro a la derecha"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "ELSE": {
+                          "block": {
+                            "type": "tp_stop",
+                            "id": "b75",
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b76",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s77",
+                                      "fields": {
+                                        "TEXT": "No veo la línea: me detengo"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": []
+  },
+  "escenario": {
+    "version": 1,
+    "id": "ciudad",
+    "name": "Ciudad con señales y semáforo",
+    "cols": 6,
+    "rows": 5,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "tee",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 3,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "tee",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 2,
+        "type": "cross",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "tee",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 4,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 4,
+        "type": "tee",
+        "rot": 2
+      },
+      {
+        "c": 4,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 4,
+        "type": "curve",
+        "rot": 3
+      }
+    ],
+    "objects": [
+      {
+        "id": "s-p2",
+        "kind": "sign",
+        "sign": "p2",
+        "x": 113,
+        "y": 123,
+        "facing": 0
+      },
+      {
+        "id": "s-p1",
+        "kind": "sign",
+        "sign": "p1",
+        "x": 66,
+        "y": 123,
+        "facing": 0
+      },
+      {
+        "id": "s-claxon",
+        "kind": "sign",
+        "sign": "claxon",
+        "x": 27,
+        "y": 86,
+        "facing": 1.5707963267948966
+      },
+      {
+        "id": "s-30",
+        "kind": "sign",
+        "sign": "limite30",
+        "x": 74,
+        "y": 27,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "semaforo",
+        "kind": "light",
+        "x": 88,
+        "y": 27,
+        "facing": 3.141592653589793,
+        "state": "rojo",
+        "cycle": {
+          "auto": true,
+          "rojo": 6,
+          "verde": 7,
+          "amarillo": 2
+        }
+      },
+      {
+        "id": "s-fin30",
+        "kind": "sign",
+        "sign": "fin30",
+        "x": 148,
+        "y": 27,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "s-izq",
+        "kind": "sign",
+        "sign": "izquierda",
+        "x": 116,
+        "y": 50,
+        "facing": 1.5707963267948966
+      },
+      {
+        "id": "s-der",
+        "kind": "sign",
+        "sign": "derecha",
+        "x": 140,
+        "y": 87,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "caja-1",
+        "kind": "obstacle",
+        "shape": "caja",
+        "x": 55,
+        "y": 75,
+        "w": 8,
+        "d": 8,
+        "h": 8,
+        "rot": 0
+      }
+    ],
+    "zones": [
+      {
+        "id": "zona-30",
+        "kind": "slow",
+        "label": "30",
+        "x": 78,
+        "y": 6,
+        "w": 40,
+        "d": 18
+      },
+      {
+        "id": "plaza-1",
+        "kind": "parking",
+        "label": "1",
+        "x": 72,
+        "y": 104,
+        "w": 15,
+        "d": 22
+      },
+      {
+        "id": "plaza-2",
+        "kind": "parking",
+        "label": "2",
+        "x": 118,
+        "y": 104,
+        "w": 15,
+        "d": 22
+      }
+    ],
+    "start": {
+      "x": 30,
+      "y": 15,
+      "heading": 0
+    }
+  }
+}

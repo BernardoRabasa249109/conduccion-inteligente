@@ -1,0 +1,687 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Sensor de estacionamiento: luces y velocidad según la distancia",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_forever",
+          "id": "hzc",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "variables_set",
+                "id": "bxq",
+                "fields": {
+                  "VAR": {
+                    "id": "var-d"
+                  }
+                },
+                "inputs": {
+                  "VALUE": {
+                    "block": {
+                      "type": "tp_distance",
+                      "id": "bxp"
+                    },
+                    "shadow": {
+                      "type": "math_number",
+                      "id": "sxr",
+                      "fields": {
+                        "NUM": 0
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "controls_if",
+                    "id": "bxy",
+                    "extraState": {
+                      "elseIfCount": 0,
+                      "hasElse": false
+                    },
+                    "inputs": {
+                      "IF0": {
+                        "block": {
+                          "type": "logic_compare",
+                          "id": "bxt",
+                          "fields": {
+                            "OP": "EQ"
+                          },
+                          "inputs": {
+                            "A": {
+                              "block": {
+                                "type": "variables_get",
+                                "id": "bxs",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "var-d"
+                                  }
+                                }
+                              },
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "sxu",
+                                "fields": {
+                                  "NUM": 0
+                                }
+                              }
+                            },
+                            "B": {
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "sxv",
+                                "fields": {
+                                  "NUM": 0
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "DO0": {
+                        "block": {
+                          "type": "variables_set",
+                          "id": "bxw",
+                          "fields": {
+                            "VAR": {
+                              "id": "var-d"
+                            }
+                          },
+                          "inputs": {
+                            "VALUE": {
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "sxx",
+                                "fields": {
+                                  "NUM": 100
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "variables_set",
+                        "id": "bya",
+                        "fields": {
+                          "VAR": {
+                            "id": "var-velocidad"
+                          }
+                        },
+                        "inputs": {
+                          "VALUE": {
+                            "block": {
+                              "type": "tp_constrain",
+                              "id": "by6",
+                              "inputs": {
+                                "X": {
+                                  "block": {
+                                    "type": "tp_map",
+                                    "id": "by0",
+                                    "inputs": {
+                                      "X": {
+                                        "block": {
+                                          "type": "variables_get",
+                                          "id": "bxz",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "var-d"
+                                            }
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sy1",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      },
+                                      "FL": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sy2",
+                                          "fields": {
+                                            "NUM": 8
+                                          }
+                                        }
+                                      },
+                                      "FH": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sy3",
+                                          "fields": {
+                                            "NUM": 60
+                                          }
+                                        }
+                                      },
+                                      "TL": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sy4",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      },
+                                      "TH": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sy5",
+                                          "fields": {
+                                            "NUM": 160
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "sy7",
+                                    "fields": {
+                                      "NUM": 0
+                                    }
+                                  }
+                                },
+                                "LOW": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "sy8",
+                                    "fields": {
+                                      "NUM": 0
+                                    }
+                                  }
+                                },
+                                "HIGH": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "sy9",
+                                    "fields": {
+                                      "NUM": 160
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "shadow": {
+                              "type": "math_number",
+                              "id": "syb",
+                              "fields": {
+                                "NUM": 0
+                              }
+                            }
+                          }
+                        },
+                        "next": {
+                          "block": {
+                            "type": "variables_set",
+                            "id": "byn",
+                            "fields": {
+                              "VAR": {
+                                "id": "var-rojo"
+                              }
+                            },
+                            "inputs": {
+                              "VALUE": {
+                                "block": {
+                                  "type": "tp_constrain",
+                                  "id": "byj",
+                                  "inputs": {
+                                    "X": {
+                                      "block": {
+                                        "type": "tp_map",
+                                        "id": "byd",
+                                        "inputs": {
+                                          "X": {
+                                            "block": {
+                                              "type": "variables_get",
+                                              "id": "byc",
+                                              "fields": {
+                                                "VAR": {
+                                                  "id": "var-d"
+                                                }
+                                              }
+                                            },
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "sye",
+                                              "fields": {
+                                                "NUM": 0
+                                              }
+                                            }
+                                          },
+                                          "FL": {
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "syf",
+                                              "fields": {
+                                                "NUM": 10
+                                              }
+                                            }
+                                          },
+                                          "FH": {
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "syg",
+                                              "fields": {
+                                                "NUM": 50
+                                              }
+                                            }
+                                          },
+                                          "TL": {
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "syh",
+                                              "fields": {
+                                                "NUM": 255
+                                              }
+                                            }
+                                          },
+                                          "TH": {
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "syi",
+                                              "fields": {
+                                                "NUM": 0
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "shadow": {
+                                        "type": "math_number",
+                                        "id": "syk",
+                                        "fields": {
+                                          "NUM": 0
+                                        }
+                                      }
+                                    },
+                                    "LOW": {
+                                      "shadow": {
+                                        "type": "math_number",
+                                        "id": "syl",
+                                        "fields": {
+                                          "NUM": 0
+                                        }
+                                      }
+                                    },
+                                    "HIGH": {
+                                      "shadow": {
+                                        "type": "math_number",
+                                        "id": "sym",
+                                        "fields": {
+                                          "NUM": 255
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "syo",
+                                  "fields": {
+                                    "NUM": 0
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_lights_rgb",
+                                "id": "byu",
+                                "inputs": {
+                                  "R": {
+                                    "block": {
+                                      "type": "variables_get",
+                                      "id": "byp",
+                                      "fields": {
+                                        "VAR": {
+                                          "id": "var-rojo"
+                                        }
+                                      }
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "syv",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "G": {
+                                    "block": {
+                                      "type": "math_arithmetic",
+                                      "id": "byr",
+                                      "fields": {
+                                        "OP": "MINUS"
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "shadow": {
+                                            "type": "math_number",
+                                            "id": "sys",
+                                            "fields": {
+                                              "NUM": 255
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "block": {
+                                            "type": "variables_get",
+                                            "id": "byq",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "var-rojo"
+                                              }
+                                            }
+                                          },
+                                          "shadow": {
+                                            "type": "math_number",
+                                            "id": "syt",
+                                            "fields": {
+                                              "NUM": 0
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "syw",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "syx",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "tp_motors",
+                                    "id": "bz0",
+                                    "inputs": {
+                                      "LEFT": {
+                                        "block": {
+                                          "type": "variables_get",
+                                          "id": "byy",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "var-velocidad"
+                                            }
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sz1",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      },
+                                      "RIGHT": {
+                                        "block": {
+                                          "type": "variables_get",
+                                          "id": "byz",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "var-velocidad"
+                                            }
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sz2",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "next": {
+                                      "block": {
+                                        "type": "tp_decide",
+                                        "id": "bza",
+                                        "inputs": {
+                                          "TEXT": {
+                                            "block": {
+                                              "type": "tp_join",
+                                              "id": "bz7",
+                                              "inputs": {
+                                                "A": {
+                                                  "block": {
+                                                    "type": "tp_join",
+                                                    "id": "bz4",
+                                                    "inputs": {
+                                                      "A": {
+                                                        "shadow": {
+                                                          "type": "text",
+                                                          "id": "sz5",
+                                                          "fields": {
+                                                            "TEXT": "Caja a "
+                                                          }
+                                                        }
+                                                      },
+                                                      "B": {
+                                                        "block": {
+                                                          "type": "variables_get",
+                                                          "id": "bz3",
+                                                          "fields": {
+                                                            "VAR": {
+                                                              "id": "var-d"
+                                                            }
+                                                          }
+                                                        },
+                                                        "shadow": {
+                                                          "type": "text",
+                                                          "id": "sz6",
+                                                          "fields": {
+                                                            "TEXT": ""
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  "shadow": {
+                                                    "type": "text",
+                                                    "id": "sz8",
+                                                    "fields": {
+                                                      "TEXT": ""
+                                                    }
+                                                  }
+                                                },
+                                                "B": {
+                                                  "shadow": {
+                                                    "type": "text",
+                                                    "id": "sz9",
+                                                    "fields": {
+                                                      "TEXT": " cm: cuanto más cerca, más lento y más rojo"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "shadow": {
+                                              "type": "text",
+                                              "id": "szb",
+                                              "fields": {
+                                                "TEXT": ""
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": [
+      {
+        "name": "d",
+        "id": "var-d"
+      },
+      {
+        "name": "velocidad",
+        "id": "var-velocidad"
+      },
+      {
+        "name": "rojo",
+        "id": "var-rojo"
+      }
+    ]
+  },
+  "escenario": {
+    "version": 1,
+    "id": "basica",
+    "name": "Pista básica",
+    "cols": 6,
+    "rows": 4,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "curve",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      }
+    ],
+    "objects": [
+      {
+        "id": "caja-ej",
+        "kind": "obstacle",
+        "shape": "caja",
+        "x": 125,
+        "y": 105,
+        "w": 8,
+        "d": 8,
+        "h": 8,
+        "rot": 0
+      }
+    ],
+    "zones": [],
+    "start": {
+      "x": 40,
+      "y": 105,
+      "heading": 0
+    }
+  }
+}

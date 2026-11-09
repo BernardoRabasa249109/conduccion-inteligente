@@ -1,0 +1,194 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Avanzar y parar",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_on_start",
+          "id": "h8",
+          "x": 20,
+          "y": 20,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "tp_motors",
+                "id": "b1",
+                "inputs": {
+                  "LEFT": {
+                    "shadow": {
+                      "type": "math_number",
+                      "id": "s2",
+                      "fields": {
+                        "NUM": 150
+                      }
+                    }
+                  },
+                  "RIGHT": {
+                    "shadow": {
+                      "type": "math_number",
+                      "id": "s3",
+                      "fields": {
+                        "NUM": 150
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "tp_wait",
+                    "id": "b4",
+                    "inputs": {
+                      "MS": {
+                        "shadow": {
+                          "type": "math_number",
+                          "id": "s5",
+                          "fields": {
+                            "NUM": 1500
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "tp_stop",
+                        "id": "b6",
+                        "next": {
+                          "block": {
+                            "type": "tp_icon",
+                            "id": "b7",
+                            "fields": {
+                              "ICON": "Yes"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": []
+  },
+  "escenario": {
+    "version": 1,
+    "id": "basica",
+    "name": "Pista básica",
+    "cols": 6,
+    "rows": 4,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "curve",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      }
+    ],
+    "objects": [],
+    "zones": [],
+    "start": {
+      "x": 40,
+      "y": 105,
+      "heading": 0
+    }
+  }
+}

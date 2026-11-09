@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "id": "ciudad",
+  "name": "Ciudad con señales y semáforo",
+  "cols": 6,
+  "rows": 5,
+  "tile": 30,
+  "tiles": [
+    {
+      "c": 0,
+      "r": 0,
+      "type": "curve",
+      "rot": 1
+    },
+    {
+      "c": 1,
+      "r": 0,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 2,
+      "r": 0,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 3,
+      "r": 0,
+      "type": "tee",
+      "rot": 0
+    },
+    {
+      "c": 4,
+      "r": 0,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 5,
+      "r": 0,
+      "type": "curve",
+      "rot": 2
+    },
+    {
+      "c": 0,
+      "r": 1,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 3,
+      "r": 1,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 5,
+      "r": 1,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 0,
+      "r": 2,
+      "type": "tee",
+      "rot": 3
+    },
+    {
+      "c": 1,
+      "r": 2,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 2,
+      "r": 2,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 3,
+      "r": 2,
+      "type": "cross",
+      "rot": 0
+    },
+    {
+      "c": 4,
+      "r": 2,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 5,
+      "r": 2,
+      "type": "tee",
+      "rot": 1
+    },
+    {
+      "c": 0,
+      "r": 3,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 3,
+      "r": 3,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 5,
+      "r": 3,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 0,
+      "r": 4,
+      "type": "curve",
+      "rot": 0
+    },
+    {
+      "c": 1,
+      "r": 4,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 2,
+      "r": 4,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 3,
+      "r": 4,
+      "type": "tee",
+      "rot": 2
+    },
+    {
+      "c": 4,
+      "r": 4,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 5,
+      "r": 4,
+      "type": "curve",
+      "rot": 3
+    }
+  ],
+  "objects": [
+    {
+      "id": "s-p2",
+      "kind": "sign",
+      "sign": "p2",
+      "x": 113,
+      "y": 123,
+      "facing": 0
+    },
+    {
+      "id": "s-p1",
+      "kind": "sign",
+      "sign": "p1",
+      "x": 66,
+      "y": 123,
+      "facing": 0
+    },
+    {
+      "id": "s-claxon",
+      "kind": "sign",
+      "sign": "claxon",
+      "x": 27,
+      "y": 86,
+      "facing": 1.5707963267948966
+    },
+    {
+      "id": "s-30",
+      "kind": "sign",
+      "sign": "limite30",
+      "x": 74,
+      "y": 27,
+      "facing": 3.141592653589793
+    },
+    {
+      "id": "semaforo",
+      "kind": "light",
+      "x": 88,
+      "y": 27,
+      "facing": 3.141592653589793,
+      "state": "rojo",
+      "cycle": {
+        "auto": true,
+        "rojo": 6,
+        "verde": 7,
+        "amarillo": 2
+      }
+    },
+    {
+      "id": "s-fin30",
+      "kind": "sign",
+      "sign": "fin30",
+      "x": 148,
+      "y": 27,
+      "facing": 3.141592653589793
+    },
+    {
+      "id": "s-izq",
+      "kind": "sign",
+      "sign": "izquierda",
+      "x": 116,
+      "y": 50,
+      "facing": 1.5707963267948966
+    },
+    {
+      "id": "s-der",
+      "kind": "sign",
+      "sign": "derecha",
+      "x": 140,
+      "y": 87,
+      "facing": 3.141592653589793
+    },
+    {
+      "id": "caja-1",
+      "kind": "obstacle",
+      "shape": "caja",
+      "x": 55,
+      "y": 75,
+      "w": 8,
+      "d": 8,
+      "h": 8,
+      "rot": 0
+    }
+  ],
+  "zones": [
+    {
+      "id": "zona-30",
+      "kind": "slow",
+      "label": "30",
+      "x": 78,
+      "y": 6,
+      "w": 40,
+      "d": 18
+    },
+    {
+      "id": "plaza-1",
+      "kind": "parking",
+      "label": "1",
+      "x": 72,
+      "y": 104,
+      "w": 15,
+      "d": 22
+    },
+    {
+      "id": "plaza-2",
+      "kind": "parking",
+      "label": "2",
+      "x": 118,
+      "y": 104,
+      "w": 15,
+      "d": 22
+    }
+  ],
+  "start": {
+    "x": 150,
+    "y": 135,
+    "heading": 3.141592653589793
+  }
+}

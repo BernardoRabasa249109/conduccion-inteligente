@@ -1,0 +1,798 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Reducir velocidad ante la señal 30",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_on_start",
+          "id": "h89",
+          "x": 20,
+          "y": 20,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "variables_set",
+                "id": "b87",
+                "fields": {
+                  "VAR": {
+                    "id": "var-velocidad"
+                  }
+                },
+                "inputs": {
+                  "VALUE": {
+                    "shadow": {
+                      "type": "math_number",
+                      "id": "s88",
+                      "fields": {
+                        "NUM": 150
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "tp_forever",
+          "id": "h9l",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "controls_if",
+                "id": "b8k",
+                "extraState": {
+                  "elseIfCount": 0,
+                  "hasElse": false
+                },
+                "inputs": {
+                  "IF0": {
+                    "block": {
+                      "type": "logic_operation",
+                      "id": "b8f",
+                      "fields": {
+                        "OP": "AND"
+                      },
+                      "inputs": {
+                        "A": {
+                          "block": {
+                            "type": "tp_sign_is",
+                            "id": "b8a",
+                            "fields": {
+                              "LABEL": "limite30"
+                            }
+                          }
+                        },
+                        "B": {
+                          "block": {
+                            "type": "logic_compare",
+                            "id": "b8c",
+                            "fields": {
+                              "OP": "NEQ"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "variables_get",
+                                  "id": "b8b",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "var-velocidad"
+                                    }
+                                  }
+                                },
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s8d",
+                                  "fields": {
+                                    "NUM": 0
+                                  }
+                                }
+                              },
+                              "B": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s8e",
+                                  "fields": {
+                                    "NUM": 70
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "DO0": {
+                    "block": {
+                      "type": "variables_set",
+                      "id": "b8g",
+                      "fields": {
+                        "VAR": {
+                          "id": "var-velocidad"
+                        }
+                      },
+                      "inputs": {
+                        "VALUE": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "s8h",
+                            "fields": {
+                              "NUM": 70
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "tp_decide",
+                          "id": "b8i",
+                          "inputs": {
+                            "TEXT": {
+                              "shadow": {
+                                "type": "text",
+                                "id": "s8j",
+                                "fields": {
+                                  "TEXT": "Vi la señal 30: reduzco a PWM 70 (no son km/h)"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "controls_if",
+                    "id": "b8v",
+                    "extraState": {
+                      "elseIfCount": 0,
+                      "hasElse": false
+                    },
+                    "inputs": {
+                      "IF0": {
+                        "block": {
+                          "type": "logic_operation",
+                          "id": "b8q",
+                          "fields": {
+                            "OP": "AND"
+                          },
+                          "inputs": {
+                            "A": {
+                              "block": {
+                                "type": "tp_sign_is",
+                                "id": "b8l",
+                                "fields": {
+                                  "LABEL": "fin30"
+                                }
+                              }
+                            },
+                            "B": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "b8n",
+                                "fields": {
+                                  "OP": "NEQ"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "variables_get",
+                                      "id": "b8m",
+                                      "fields": {
+                                        "VAR": {
+                                          "id": "var-velocidad"
+                                        }
+                                      }
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "s8o",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "s8p",
+                                      "fields": {
+                                        "NUM": 150
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "DO0": {
+                        "block": {
+                          "type": "variables_set",
+                          "id": "b8r",
+                          "fields": {
+                            "VAR": {
+                              "id": "var-velocidad"
+                            }
+                          },
+                          "inputs": {
+                            "VALUE": {
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "s8s",
+                                "fields": {
+                                  "NUM": 150
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "tp_decide",
+                              "id": "b8t",
+                              "inputs": {
+                                "TEXT": {
+                                  "shadow": {
+                                    "type": "text",
+                                    "id": "s8u",
+                                    "fields": {
+                                      "TEXT": "Fin del límite: vuelvo a PWM 150"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "controls_if",
+                        "id": "b9k",
+                        "extraState": {
+                          "elseIfCount": 2,
+                          "hasElse": true
+                        },
+                        "inputs": {
+                          "IF0": {
+                            "block": {
+                              "type": "logic_operation",
+                              "id": "b8z",
+                              "fields": {
+                                "OP": "AND"
+                              },
+                              "inputs": {
+                                "A": {
+                                  "block": {
+                                    "type": "tp_line",
+                                    "id": "b8x",
+                                    "fields": {
+                                      "SIDE": "L",
+                                      "COLOR": "black"
+                                    }
+                                  }
+                                },
+                                "B": {
+                                  "block": {
+                                    "type": "tp_line",
+                                    "id": "b8y",
+                                    "fields": {
+                                      "SIDE": "R",
+                                      "COLOR": "black"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "DO0": {
+                            "block": {
+                              "type": "tp_motors",
+                              "id": "b90",
+                              "inputs": {
+                                "LEFT": {
+                                  "block": {
+                                    "type": "variables_get",
+                                    "id": "b8w",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "var-velocidad"
+                                      }
+                                    }
+                                  },
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s91",
+                                    "fields": {
+                                      "NUM": 0
+                                    }
+                                  }
+                                },
+                                "RIGHT": {
+                                  "block": {
+                                    "type": "variables_get",
+                                    "id": "b8w",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "var-velocidad"
+                                      }
+                                    }
+                                  },
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s92",
+                                    "fields": {
+                                      "NUM": 0
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "tp_decide",
+                                  "id": "b93",
+                                  "inputs": {
+                                    "TEXT": {
+                                      "shadow": {
+                                        "type": "text",
+                                        "id": "s94",
+                                        "fields": {
+                                          "TEXT": "Los dos sensores ven negro: sigo recto"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "IF1": {
+                            "block": {
+                              "type": "tp_line",
+                              "id": "b95",
+                              "fields": {
+                                "SIDE": "L",
+                                "COLOR": "black"
+                              }
+                            }
+                          },
+                          "DO1": {
+                            "block": {
+                              "type": "tp_motors",
+                              "id": "b96",
+                              "inputs": {
+                                "LEFT": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s97",
+                                    "fields": {
+                                      "NUM": 20
+                                    }
+                                  }
+                                },
+                                "RIGHT": {
+                                  "block": {
+                                    "type": "variables_get",
+                                    "id": "b8w",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "var-velocidad"
+                                      }
+                                    }
+                                  },
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s98",
+                                    "fields": {
+                                      "NUM": 0
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "tp_decide",
+                                  "id": "b99",
+                                  "inputs": {
+                                    "TEXT": {
+                                      "shadow": {
+                                        "type": "text",
+                                        "id": "s9a",
+                                        "fields": {
+                                          "TEXT": "La línea está a mi izquierda: giro a la izquierda"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "IF2": {
+                            "block": {
+                              "type": "tp_line",
+                              "id": "b9b",
+                              "fields": {
+                                "SIDE": "R",
+                                "COLOR": "black"
+                              }
+                            }
+                          },
+                          "DO2": {
+                            "block": {
+                              "type": "tp_motors",
+                              "id": "b9c",
+                              "inputs": {
+                                "LEFT": {
+                                  "block": {
+                                    "type": "variables_get",
+                                    "id": "b8w",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "var-velocidad"
+                                      }
+                                    }
+                                  },
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s9d",
+                                    "fields": {
+                                      "NUM": 0
+                                    }
+                                  }
+                                },
+                                "RIGHT": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s9e",
+                                    "fields": {
+                                      "NUM": 20
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "tp_decide",
+                                  "id": "b9f",
+                                  "inputs": {
+                                    "TEXT": {
+                                      "shadow": {
+                                        "type": "text",
+                                        "id": "s9g",
+                                        "fields": {
+                                          "TEXT": "La línea está a mi derecha: giro a la derecha"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "ELSE": {
+                            "block": {
+                              "type": "tp_stop",
+                              "id": "b9h",
+                              "next": {
+                                "block": {
+                                  "type": "tp_decide",
+                                  "id": "b9i",
+                                  "inputs": {
+                                    "TEXT": {
+                                      "shadow": {
+                                        "type": "text",
+                                        "id": "s9j",
+                                        "fields": {
+                                          "TEXT": "No veo la línea: me detengo"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": [
+      {
+        "name": "velocidad",
+        "id": "var-velocidad"
+      }
+    ]
+  },
+  "escenario": {
+    "version": 1,
+    "id": "ciudad",
+    "name": "Ciudad con señales y semáforo",
+    "cols": 6,
+    "rows": 5,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "tee",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 3,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "tee",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 2,
+        "type": "cross",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "tee",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 4,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 4,
+        "type": "tee",
+        "rot": 2
+      },
+      {
+        "c": 4,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 4,
+        "type": "curve",
+        "rot": 3
+      }
+    ],
+    "objects": [
+      {
+        "id": "s-p2",
+        "kind": "sign",
+        "sign": "p2",
+        "x": 113,
+        "y": 123,
+        "facing": 0
+      },
+      {
+        "id": "s-p1",
+        "kind": "sign",
+        "sign": "p1",
+        "x": 66,
+        "y": 123,
+        "facing": 0
+      },
+      {
+        "id": "s-claxon",
+        "kind": "sign",
+        "sign": "claxon",
+        "x": 27,
+        "y": 86,
+        "facing": 1.5707963267948966
+      },
+      {
+        "id": "s-30",
+        "kind": "sign",
+        "sign": "limite30",
+        "x": 74,
+        "y": 27,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "semaforo",
+        "kind": "light",
+        "x": 88,
+        "y": 27,
+        "facing": 3.141592653589793,
+        "state": "rojo",
+        "cycle": {
+          "auto": true,
+          "rojo": 6,
+          "verde": 7,
+          "amarillo": 2
+        }
+      },
+      {
+        "id": "s-fin30",
+        "kind": "sign",
+        "sign": "fin30",
+        "x": 148,
+        "y": 27,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "s-izq",
+        "kind": "sign",
+        "sign": "izquierda",
+        "x": 116,
+        "y": 50,
+        "facing": 1.5707963267948966
+      },
+      {
+        "id": "s-der",
+        "kind": "sign",
+        "sign": "derecha",
+        "x": 140,
+        "y": 87,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "caja-1",
+        "kind": "obstacle",
+        "shape": "caja",
+        "x": 55,
+        "y": 75,
+        "w": 8,
+        "d": 8,
+        "h": 8,
+        "rot": 0
+      }
+    ],
+    "zones": [
+      {
+        "id": "zona-30",
+        "kind": "slow",
+        "label": "30",
+        "x": 78,
+        "y": 6,
+        "w": 40,
+        "d": 18
+      },
+      {
+        "id": "plaza-1",
+        "kind": "parking",
+        "label": "1",
+        "x": 72,
+        "y": 104,
+        "w": 15,
+        "d": 22
+      },
+      {
+        "id": "plaza-2",
+        "kind": "parking",
+        "label": "2",
+        "x": 118,
+        "y": 104,
+        "w": 15,
+        "d": 22
+      }
+    ],
+    "start": {
+      "x": 30,
+      "y": 15,
+      "heading": 0
+    }
+  }
+}

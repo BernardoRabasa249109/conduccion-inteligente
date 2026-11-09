@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "id": "basica",
+  "name": "Pista básica",
+  "cols": 6,
+  "rows": 4,
+  "tile": 30,
+  "tiles": [
+    {
+      "c": 0,
+      "r": 0,
+      "type": "curve",
+      "rot": 1
+    },
+    {
+      "c": 5,
+      "r": 0,
+      "type": "curve",
+      "rot": 2
+    },
+    {
+      "c": 0,
+      "r": 3,
+      "type": "curve",
+      "rot": 0
+    },
+    {
+      "c": 5,
+      "r": 3,
+      "type": "curve",
+      "rot": 3
+    },
+    {
+      "c": 1,
+      "r": 0,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 1,
+      "r": 3,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 2,
+      "r": 0,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 2,
+      "r": 3,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 3,
+      "r": 0,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 3,
+      "r": 3,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 4,
+      "r": 0,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 4,
+      "r": 3,
+      "type": "straight",
+      "rot": 0
+    },
+    {
+      "c": 0,
+      "r": 1,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 5,
+      "r": 1,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 0,
+      "r": 2,
+      "type": "straight",
+      "rot": 1
+    },
+    {
+      "c": 5,
+      "r": 2,
+      "type": "straight",
+      "rot": 1
+    }
+  ],
+  "objects": [],
+  "zones": [],
+  "start": {
+    "x": 40,
+    "y": 105,
+    "heading": 0
+  }
+}

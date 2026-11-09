@@ -1,0 +1,1423 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Estacionarse en P2 y volver",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_on_start",
+          "id": "hfi",
+          "x": 20,
+          "y": 20,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "variables_set",
+                "id": "bfd",
+                "fields": {
+                  "VAR": {
+                    "id": "var-estacionado"
+                  }
+                },
+                "inputs": {
+                  "VALUE": {
+                    "shadow": {
+                      "type": "math_number",
+                      "id": "sfe",
+                      "fields": {
+                        "NUM": 0
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "variables_set",
+                    "id": "bff",
+                    "fields": {
+                      "VAR": {
+                        "id": "var-vistaP"
+                      }
+                    },
+                    "inputs": {
+                      "VALUE": {
+                        "shadow": {
+                          "type": "math_number",
+                          "id": "sfg",
+                          "fields": {
+                            "NUM": 0
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "tp_state_set",
+                        "id": "bfh",
+                        "fields": {
+                          "STATE": "SEGUIR_LINEA"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "tp_forever",
+          "id": "hir",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "controls_if",
+                "id": "bg9",
+                "extraState": {
+                  "elseIfCount": 0,
+                  "hasElse": false
+                },
+                "inputs": {
+                  "IF0": {
+                    "block": {
+                      "type": "logic_operation",
+                      "id": "bg6",
+                      "fields": {
+                        "OP": "AND"
+                      },
+                      "inputs": {
+                        "A": {
+                          "block": {
+                            "type": "tp_state_is",
+                            "id": "bfz",
+                            "fields": {
+                              "STATE": "SEGUIR_LINEA"
+                            }
+                          }
+                        },
+                        "B": {
+                          "block": {
+                            "type": "logic_operation",
+                            "id": "bg5",
+                            "fields": {
+                              "OP": "AND"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "tp_sign_is",
+                                  "id": "bg0",
+                                  "fields": {
+                                    "LABEL": "p2"
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "logic_compare",
+                                  "id": "bg2",
+                                  "fields": {
+                                    "OP": "EQ"
+                                  },
+                                  "inputs": {
+                                    "A": {
+                                      "block": {
+                                        "type": "variables_get",
+                                        "id": "bg1",
+                                        "fields": {
+                                          "VAR": {
+                                            "id": "var-estacionado"
+                                          }
+                                        }
+                                      },
+                                      "shadow": {
+                                        "type": "math_number",
+                                        "id": "sg3",
+                                        "fields": {
+                                          "NUM": 0
+                                        }
+                                      }
+                                    },
+                                    "B": {
+                                      "shadow": {
+                                        "type": "math_number",
+                                        "id": "sg4",
+                                        "fields": {
+                                          "NUM": 0
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "DO0": {
+                    "block": {
+                      "type": "variables_set",
+                      "id": "bg7",
+                      "fields": {
+                        "VAR": {
+                          "id": "var-vistaP"
+                        }
+                      },
+                      "inputs": {
+                        "VALUE": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "sg8",
+                            "fields": {
+                              "NUM": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "controls_if",
+                    "id": "biq",
+                    "extraState": {
+                      "elseIfCount": 3,
+                      "hasElse": true
+                    },
+                    "inputs": {
+                      "IF0": {
+                        "block": {
+                          "type": "logic_operation",
+                          "id": "bgi",
+                          "fields": {
+                            "OP": "AND"
+                          },
+                          "inputs": {
+                            "A": {
+                              "block": {
+                                "type": "tp_state_is",
+                                "id": "bga",
+                                "fields": {
+                                  "STATE": "SEGUIR_LINEA"
+                                }
+                              }
+                            },
+                            "B": {
+                              "block": {
+                                "type": "logic_operation",
+                                "id": "bgh",
+                                "fields": {
+                                  "OP": "AND"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "logic_compare",
+                                      "id": "bgc",
+                                      "fields": {
+                                        "OP": "EQ"
+                                      },
+                                      "inputs": {
+                                        "A": {
+                                          "block": {
+                                            "type": "variables_get",
+                                            "id": "bgb",
+                                            "fields": {
+                                              "VAR": {
+                                                "id": "var-vistaP"
+                                              }
+                                            }
+                                          },
+                                          "shadow": {
+                                            "type": "math_number",
+                                            "id": "sgd",
+                                            "fields": {
+                                              "NUM": 0
+                                            }
+                                          }
+                                        },
+                                        "B": {
+                                          "shadow": {
+                                            "type": "math_number",
+                                            "id": "sge",
+                                            "fields": {
+                                              "NUM": 1
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "block": {
+                                      "type": "logic_negate",
+                                      "id": "bgg",
+                                      "inputs": {
+                                        "BOOL": {
+                                          "block": {
+                                            "type": "tp_sign_is",
+                                            "id": "bgf",
+                                            "fields": {
+                                              "LABEL": "p2"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "DO0": {
+                        "block": {
+                          "type": "tp_state_set",
+                          "id": "bgj",
+                          "fields": {
+                            "STATE": "ESTACIONAR"
+                          },
+                          "next": {
+                            "block": {
+                              "type": "variables_set",
+                              "id": "bgk",
+                              "fields": {
+                                "VAR": {
+                                  "id": "var-vistaP"
+                                }
+                              },
+                              "inputs": {
+                                "VALUE": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "sgl",
+                                    "fields": {
+                                      "NUM": 0
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "tp_decide",
+                                  "id": "bgm",
+                                  "inputs": {
+                                    "TEXT": {
+                                      "shadow": {
+                                        "type": "text",
+                                        "id": "sgn",
+                                        "fields": {
+                                          "TEXT": "Pasé la señal P2: empiezo a estacionarme"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "IF1": {
+                        "block": {
+                          "type": "tp_state_is",
+                          "id": "bgo",
+                          "fields": {
+                            "STATE": "ESTACIONAR"
+                          }
+                        }
+                      },
+                      "DO1": {
+                        "block": {
+                          "type": "controls_if",
+                          "id": "bhi",
+                          "extraState": {
+                            "elseIfCount": 2,
+                            "hasElse": true
+                          },
+                          "inputs": {
+                            "IF0": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "bgq",
+                                "fields": {
+                                  "OP": "LT"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_state_time",
+                                      "id": "bgp"
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sgr",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sgs",
+                                      "fields": {
+                                        "NUM": 700
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO0": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bgt",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sgu",
+                                      "fields": {
+                                        "NUM": 110
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sgv",
+                                      "fields": {
+                                        "NUM": 110
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "IF1": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "bgx",
+                                "fields": {
+                                  "OP": "LT"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_state_time",
+                                      "id": "bgw"
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sgy",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sgz",
+                                      "fields": {
+                                        "NUM": 1080
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO1": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bh0",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sh1",
+                                      "fields": {
+                                        "NUM": 110
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sh2",
+                                      "fields": {
+                                        "NUM": -110
+                                      }
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "tp_decide",
+                                    "id": "bh3",
+                                    "inputs": {
+                                      "TEXT": {
+                                        "shadow": {
+                                          "type": "text",
+                                          "id": "sh4",
+                                          "fields": {
+                                            "TEXT": "Giro 90° a la derecha hacia la plaza"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "IF2": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "bh6",
+                                "fields": {
+                                  "OP": "LT"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_state_time",
+                                      "id": "bh5"
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sh7",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sh8",
+                                      "fields": {
+                                        "NUM": 2080
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO2": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bh9",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sha",
+                                      "fields": {
+                                        "NUM": 110
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "shb",
+                                      "fields": {
+                                        "NUM": 110
+                                      }
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "tp_decide",
+                                    "id": "bhc",
+                                    "inputs": {
+                                      "TEXT": {
+                                        "shadow": {
+                                          "type": "text",
+                                          "id": "shd",
+                                          "fields": {
+                                            "TEXT": "Entro en la plaza"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "ELSE": {
+                              "block": {
+                                "type": "tp_stop",
+                                "id": "bhe",
+                                "next": {
+                                  "block": {
+                                    "type": "tp_state_set",
+                                    "id": "bhf",
+                                    "fields": {
+                                      "STATE": "ESPERAR"
+                                    },
+                                    "next": {
+                                      "block": {
+                                        "type": "tp_decide",
+                                        "id": "bhg",
+                                        "inputs": {
+                                          "TEXT": {
+                                            "shadow": {
+                                              "type": "text",
+                                              "id": "shh",
+                                              "fields": {
+                                                "TEXT": "Estacionado: espero 2 segundos"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "IF2": {
+                        "block": {
+                          "type": "logic_operation",
+                          "id": "bho",
+                          "fields": {
+                            "OP": "AND"
+                          },
+                          "inputs": {
+                            "A": {
+                              "block": {
+                                "type": "tp_state_is",
+                                "id": "bhj",
+                                "fields": {
+                                  "STATE": "ESPERAR"
+                                }
+                              }
+                            },
+                            "B": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "bhl",
+                                "fields": {
+                                  "OP": "EQ"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "variables_get",
+                                      "id": "bhk",
+                                      "fields": {
+                                        "VAR": {
+                                          "id": "var-estacionado"
+                                        }
+                                      }
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "shm",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "shn",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "DO2": {
+                        "block": {
+                          "type": "controls_if",
+                          "id": "bhy",
+                          "extraState": {
+                            "elseIfCount": 0,
+                            "hasElse": false
+                          },
+                          "inputs": {
+                            "IF0": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "bhq",
+                                "fields": {
+                                  "OP": "GT"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_state_time",
+                                      "id": "bhp"
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "shr",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "shs",
+                                      "fields": {
+                                        "NUM": 2000
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO0": {
+                              "block": {
+                                "type": "variables_set",
+                                "id": "bht",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "var-estacionado"
+                                  }
+                                },
+                                "inputs": {
+                                  "VALUE": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "shu",
+                                      "fields": {
+                                        "NUM": 1
+                                      }
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "tp_state_set",
+                                    "id": "bhv",
+                                    "fields": {
+                                      "STATE": "RECUPERAR"
+                                    },
+                                    "next": {
+                                      "block": {
+                                        "type": "tp_decide",
+                                        "id": "bhw",
+                                        "inputs": {
+                                          "TEXT": {
+                                            "shadow": {
+                                              "type": "text",
+                                              "id": "shx",
+                                              "fields": {
+                                                "TEXT": "Salgo de la plaza"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "IF3": {
+                        "block": {
+                          "type": "tp_state_is",
+                          "id": "bhz",
+                          "fields": {
+                            "STATE": "RECUPERAR"
+                          }
+                        }
+                      },
+                      "DO3": {
+                        "block": {
+                          "type": "controls_if",
+                          "id": "bip",
+                          "extraState": {
+                            "elseIfCount": 2,
+                            "hasElse": true
+                          },
+                          "inputs": {
+                            "IF0": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "bi1",
+                                "fields": {
+                                  "OP": "LT"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_state_time",
+                                      "id": "bi0"
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "si2",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "si3",
+                                      "fields": {
+                                        "NUM": 1000
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO0": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bi4",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "si5",
+                                      "fields": {
+                                        "NUM": -110
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "si6",
+                                      "fields": {
+                                        "NUM": -110
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "IF1": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "bi8",
+                                "fields": {
+                                  "OP": "LT"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_state_time",
+                                      "id": "bi7"
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "si9",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sia",
+                                      "fields": {
+                                        "NUM": 1380
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO1": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bib",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sic",
+                                      "fields": {
+                                        "NUM": -110
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sid",
+                                      "fields": {
+                                        "NUM": 110
+                                      }
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "tp_decide",
+                                    "id": "bie",
+                                    "inputs": {
+                                      "TEXT": {
+                                        "shadow": {
+                                          "type": "text",
+                                          "id": "sif",
+                                          "fields": {
+                                            "TEXT": "Giro a la izquierda para volver al recorrido"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "IF2": {
+                              "block": {
+                                "type": "logic_operation",
+                                "id": "bii",
+                                "fields": {
+                                  "OP": "OR"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_line",
+                                      "id": "big",
+                                      "fields": {
+                                        "SIDE": "L",
+                                        "COLOR": "black"
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "block": {
+                                      "type": "tp_line",
+                                      "id": "bih",
+                                      "fields": {
+                                        "SIDE": "R",
+                                        "COLOR": "black"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO2": {
+                              "block": {
+                                "type": "tp_state_set",
+                                "id": "bij",
+                                "fields": {
+                                  "STATE": "SEGUIR_LINEA"
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "tp_decide",
+                                    "id": "bik",
+                                    "inputs": {
+                                      "TEXT": {
+                                        "shadow": {
+                                          "type": "text",
+                                          "id": "sil",
+                                          "fields": {
+                                            "TEXT": "De vuelta en la línea"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "ELSE": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bim",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sin",
+                                      "fields": {
+                                        "NUM": 90
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sio",
+                                      "fields": {
+                                        "NUM": 90
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "ELSE": {
+                        "block": {
+                          "type": "controls_if",
+                          "id": "bfy",
+                          "extraState": {
+                            "elseIfCount": 2,
+                            "hasElse": true
+                          },
+                          "inputs": {
+                            "IF0": {
+                              "block": {
+                                "type": "logic_operation",
+                                "id": "bfl",
+                                "fields": {
+                                  "OP": "AND"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "tp_line",
+                                      "id": "bfj",
+                                      "fields": {
+                                        "SIDE": "L",
+                                        "COLOR": "black"
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "block": {
+                                      "type": "tp_line",
+                                      "id": "bfk",
+                                      "fields": {
+                                        "SIDE": "R",
+                                        "COLOR": "black"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO0": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bfm",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sfn",
+                                      "fields": {
+                                        "NUM": 130
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sfo",
+                                      "fields": {
+                                        "NUM": 130
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "IF1": {
+                              "block": {
+                                "type": "tp_line",
+                                "id": "bfp",
+                                "fields": {
+                                  "SIDE": "L",
+                                  "COLOR": "black"
+                                }
+                              }
+                            },
+                            "DO1": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bfq",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sfr",
+                                      "fields": {
+                                        "NUM": 20
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sfs",
+                                      "fields": {
+                                        "NUM": 130
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "IF2": {
+                              "block": {
+                                "type": "tp_line",
+                                "id": "bft",
+                                "fields": {
+                                  "SIDE": "R",
+                                  "COLOR": "black"
+                                }
+                              }
+                            },
+                            "DO2": {
+                              "block": {
+                                "type": "tp_motors",
+                                "id": "bfu",
+                                "inputs": {
+                                  "LEFT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sfv",
+                                      "fields": {
+                                        "NUM": 130
+                                      }
+                                    }
+                                  },
+                                  "RIGHT": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "sfw",
+                                      "fields": {
+                                        "NUM": 20
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "ELSE": {
+                              "block": {
+                                "type": "tp_stop",
+                                "id": "bfx"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": [
+      {
+        "name": "estacionado",
+        "id": "var-estacionado"
+      },
+      {
+        "name": "vistaP",
+        "id": "var-vistaP"
+      }
+    ]
+  },
+  "escenario": {
+    "version": 1,
+    "id": "ciudad",
+    "name": "Ciudad con señales y semáforo",
+    "cols": 6,
+    "rows": 5,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "tee",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 3,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "tee",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 2,
+        "type": "cross",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "tee",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 4,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 4,
+        "type": "tee",
+        "rot": 2
+      },
+      {
+        "c": 4,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 4,
+        "type": "curve",
+        "rot": 3
+      }
+    ],
+    "objects": [
+      {
+        "id": "s-p2",
+        "kind": "sign",
+        "sign": "p2",
+        "x": 113,
+        "y": 123,
+        "facing": 0
+      },
+      {
+        "id": "s-p1",
+        "kind": "sign",
+        "sign": "p1",
+        "x": 66,
+        "y": 123,
+        "facing": 0
+      },
+      {
+        "id": "s-claxon",
+        "kind": "sign",
+        "sign": "claxon",
+        "x": 27,
+        "y": 86,
+        "facing": 1.5707963267948966
+      },
+      {
+        "id": "s-30",
+        "kind": "sign",
+        "sign": "limite30",
+        "x": 74,
+        "y": 27,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "semaforo",
+        "kind": "light",
+        "x": 88,
+        "y": 27,
+        "facing": 3.141592653589793,
+        "state": "rojo",
+        "cycle": {
+          "auto": true,
+          "rojo": 6,
+          "verde": 7,
+          "amarillo": 2
+        }
+      },
+      {
+        "id": "s-fin30",
+        "kind": "sign",
+        "sign": "fin30",
+        "x": 148,
+        "y": 27,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "s-izq",
+        "kind": "sign",
+        "sign": "izquierda",
+        "x": 116,
+        "y": 50,
+        "facing": 1.5707963267948966
+      },
+      {
+        "id": "s-der",
+        "kind": "sign",
+        "sign": "derecha",
+        "x": 140,
+        "y": 87,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "caja-1",
+        "kind": "obstacle",
+        "shape": "caja",
+        "x": 55,
+        "y": 75,
+        "w": 8,
+        "d": 8,
+        "h": 8,
+        "rot": 0
+      }
+    ],
+    "zones": [
+      {
+        "id": "zona-30",
+        "kind": "slow",
+        "label": "30",
+        "x": 78,
+        "y": 6,
+        "w": 40,
+        "d": 18
+      },
+      {
+        "id": "plaza-1",
+        "kind": "parking",
+        "label": "1",
+        "x": 72,
+        "y": 104,
+        "w": 15,
+        "d": 22
+      },
+      {
+        "id": "plaza-2",
+        "kind": "parking",
+        "label": "2",
+        "x": 118,
+        "y": 104,
+        "w": 15,
+        "d": 22
+      }
+    ],
+    "start": {
+      "x": 150,
+      "y": 135,
+      "heading": 3.141592653589793
+    }
+  }
+}

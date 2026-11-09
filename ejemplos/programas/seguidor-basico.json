@@ -1,0 +1,351 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Seguidor de línea básico",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_forever",
+          "id": "h15",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "controls_if",
+                "id": "b14",
+                "extraState": {
+                  "elseIfCount": 2,
+                  "hasElse": true
+                },
+                "inputs": {
+                  "IF0": {
+                    "block": {
+                      "type": "logic_operation",
+                      "id": "bj",
+                      "fields": {
+                        "OP": "AND"
+                      },
+                      "inputs": {
+                        "A": {
+                          "block": {
+                            "type": "tp_line",
+                            "id": "bh",
+                            "fields": {
+                              "SIDE": "L",
+                              "COLOR": "black"
+                            }
+                          }
+                        },
+                        "B": {
+                          "block": {
+                            "type": "tp_line",
+                            "id": "bi",
+                            "fields": {
+                              "SIDE": "R",
+                              "COLOR": "black"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "DO0": {
+                    "block": {
+                      "type": "tp_motors",
+                      "id": "bk",
+                      "inputs": {
+                        "LEFT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "sl",
+                            "fields": {
+                              "NUM": 150
+                            }
+                          }
+                        },
+                        "RIGHT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "sm",
+                            "fields": {
+                              "NUM": 150
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "tp_decide",
+                          "id": "bn",
+                          "inputs": {
+                            "TEXT": {
+                              "shadow": {
+                                "type": "text",
+                                "id": "so",
+                                "fields": {
+                                  "TEXT": "Los dos sensores ven negro: sigo recto"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "IF1": {
+                    "block": {
+                      "type": "tp_line",
+                      "id": "bp",
+                      "fields": {
+                        "SIDE": "L",
+                        "COLOR": "black"
+                      }
+                    }
+                  },
+                  "DO1": {
+                    "block": {
+                      "type": "tp_motors",
+                      "id": "bq",
+                      "inputs": {
+                        "LEFT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "sr",
+                            "fields": {
+                              "NUM": 23
+                            }
+                          }
+                        },
+                        "RIGHT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "ss",
+                            "fields": {
+                              "NUM": 150
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "tp_decide",
+                          "id": "bt",
+                          "inputs": {
+                            "TEXT": {
+                              "shadow": {
+                                "type": "text",
+                                "id": "su",
+                                "fields": {
+                                  "TEXT": "La línea está a mi izquierda: giro a la izquierda"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "IF2": {
+                    "block": {
+                      "type": "tp_line",
+                      "id": "bv",
+                      "fields": {
+                        "SIDE": "R",
+                        "COLOR": "black"
+                      }
+                    }
+                  },
+                  "DO2": {
+                    "block": {
+                      "type": "tp_motors",
+                      "id": "bw",
+                      "inputs": {
+                        "LEFT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "sx",
+                            "fields": {
+                              "NUM": 150
+                            }
+                          }
+                        },
+                        "RIGHT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "sy",
+                            "fields": {
+                              "NUM": 23
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "tp_decide",
+                          "id": "bz",
+                          "inputs": {
+                            "TEXT": {
+                              "shadow": {
+                                "type": "text",
+                                "id": "s10",
+                                "fields": {
+                                  "TEXT": "La línea está a mi derecha: giro a la derecha"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ELSE": {
+                    "block": {
+                      "type": "tp_stop",
+                      "id": "b11",
+                      "next": {
+                        "block": {
+                          "type": "tp_decide",
+                          "id": "b12",
+                          "inputs": {
+                            "TEXT": {
+                              "shadow": {
+                                "type": "text",
+                                "id": "s13",
+                                "fields": {
+                                  "TEXT": "No veo la línea: me detengo"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": []
+  },
+  "escenario": {
+    "version": 1,
+    "id": "basica",
+    "name": "Pista básica",
+    "cols": 6,
+    "rows": 4,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "curve",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      }
+    ],
+    "objects": [],
+    "zones": [],
+    "start": {
+      "x": 40,
+      "y": 105,
+      "heading": 0
+    }
+  }
+}

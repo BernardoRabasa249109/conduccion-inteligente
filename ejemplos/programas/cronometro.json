@@ -1,0 +1,809 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Cronómetro de vuelta",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_on_start",
+          "id": "h13j",
+          "x": 20,
+          "y": 20,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "variables_set",
+                "id": "b13d",
+                "fields": {
+                  "VAR": {
+                    "id": "var-vista"
+                  }
+                },
+                "inputs": {
+                  "VALUE": {
+                    "shadow": {
+                      "type": "math_number",
+                      "id": "s13e",
+                      "fields": {
+                        "NUM": 0
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "variables_set",
+                    "id": "b13f",
+                    "fields": {
+                      "VAR": {
+                        "id": "var-inicio"
+                      }
+                    },
+                    "inputs": {
+                      "VALUE": {
+                        "shadow": {
+                          "type": "math_number",
+                          "id": "s13g",
+                          "fields": {
+                            "NUM": -1
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "variables_set",
+                        "id": "b13h",
+                        "fields": {
+                          "VAR": {
+                            "id": "var-vueltas"
+                          }
+                        },
+                        "inputs": {
+                          "VALUE": {
+                            "shadow": {
+                              "type": "math_number",
+                              "id": "s13i",
+                              "fields": {
+                                "NUM": 0
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "tp_forever",
+          "id": "h15b",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "controls_if",
+                "id": "b14p",
+                "extraState": {
+                  "elseIfCount": 0,
+                  "hasElse": false
+                },
+                "inputs": {
+                  "IF0": {
+                    "block": {
+                      "type": "logic_operation",
+                      "id": "b13p",
+                      "fields": {
+                        "OP": "AND"
+                      },
+                      "inputs": {
+                        "A": {
+                          "block": {
+                            "type": "tp_sign_is",
+                            "id": "b13k",
+                            "fields": {
+                              "LABEL": "claxon"
+                            }
+                          }
+                        },
+                        "B": {
+                          "block": {
+                            "type": "logic_compare",
+                            "id": "b13m",
+                            "fields": {
+                              "OP": "EQ"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "variables_get",
+                                  "id": "b13l",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "var-vista"
+                                    }
+                                  }
+                                },
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s13n",
+                                  "fields": {
+                                    "NUM": 0
+                                  }
+                                }
+                              },
+                              "B": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s13o",
+                                  "fields": {
+                                    "NUM": 0
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "DO0": {
+                    "block": {
+                      "type": "variables_set",
+                      "id": "b13q",
+                      "fields": {
+                        "VAR": {
+                          "id": "var-vista"
+                        }
+                      },
+                      "inputs": {
+                        "VALUE": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "s13r",
+                            "fields": {
+                              "NUM": 1
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "controls_if",
+                          "id": "b14l",
+                          "extraState": {
+                            "elseIfCount": 0,
+                            "hasElse": false
+                          },
+                          "inputs": {
+                            "IF0": {
+                              "block": {
+                                "type": "logic_compare",
+                                "id": "b13t",
+                                "fields": {
+                                  "OP": "GTE"
+                                },
+                                "inputs": {
+                                  "A": {
+                                    "block": {
+                                      "type": "variables_get",
+                                      "id": "b13s",
+                                      "fields": {
+                                        "VAR": {
+                                          "id": "var-inicio"
+                                        }
+                                      }
+                                    },
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "s13u",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  },
+                                  "B": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "s13v",
+                                      "fields": {
+                                        "NUM": 0
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "DO0": {
+                              "block": {
+                                "type": "math_change",
+                                "id": "b13w",
+                                "fields": {
+                                  "VAR": {
+                                    "id": "var-vueltas"
+                                  }
+                                },
+                                "inputs": {
+                                  "DELTA": {
+                                    "shadow": {
+                                      "type": "math_number",
+                                      "id": "s13x",
+                                      "fields": {
+                                        "NUM": 1
+                                      }
+                                    }
+                                  }
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "tp_decide",
+                                    "id": "b14j",
+                                    "inputs": {
+                                      "TEXT": {
+                                        "block": {
+                                          "type": "tp_join",
+                                          "id": "b14g",
+                                          "inputs": {
+                                            "A": {
+                                              "block": {
+                                                "type": "tp_join",
+                                                "id": "b13z",
+                                                "inputs": {
+                                                  "A": {
+                                                    "shadow": {
+                                                      "type": "text",
+                                                      "id": "s140",
+                                                      "fields": {
+                                                        "TEXT": "Vuelta "
+                                                      }
+                                                    }
+                                                  },
+                                                  "B": {
+                                                    "block": {
+                                                      "type": "variables_get",
+                                                      "id": "b13y",
+                                                      "fields": {
+                                                        "VAR": {
+                                                          "id": "var-vueltas"
+                                                        }
+                                                      }
+                                                    },
+                                                    "shadow": {
+                                                      "type": "text",
+                                                      "id": "s141",
+                                                      "fields": {
+                                                        "TEXT": ""
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "shadow": {
+                                                "type": "text",
+                                                "id": "s14h",
+                                                "fields": {
+                                                  "TEXT": ""
+                                                }
+                                              }
+                                            },
+                                            "B": {
+                                              "block": {
+                                                "type": "tp_join",
+                                                "id": "b14d",
+                                                "inputs": {
+                                                  "A": {
+                                                    "shadow": {
+                                                      "type": "text",
+                                                      "id": "s14e",
+                                                      "fields": {
+                                                        "TEXT": ": "
+                                                      }
+                                                    }
+                                                  },
+                                                  "B": {
+                                                    "block": {
+                                                      "type": "tp_join",
+                                                      "id": "b14a",
+                                                      "inputs": {
+                                                        "A": {
+                                                          "block": {
+                                                            "type": "math_arithmetic",
+                                                            "id": "b147",
+                                                            "fields": {
+                                                              "OP": "DIVIDE"
+                                                            },
+                                                            "inputs": {
+                                                              "A": {
+                                                                "block": {
+                                                                  "type": "math_arithmetic",
+                                                                  "id": "b144",
+                                                                  "fields": {
+                                                                    "OP": "MINUS"
+                                                                  },
+                                                                  "inputs": {
+                                                                    "A": {
+                                                                      "block": {
+                                                                        "type": "tp_time",
+                                                                        "id": "b142"
+                                                                      },
+                                                                      "shadow": {
+                                                                        "type": "math_number",
+                                                                        "id": "s145",
+                                                                        "fields": {
+                                                                          "NUM": 0
+                                                                        }
+                                                                      }
+                                                                    },
+                                                                    "B": {
+                                                                      "block": {
+                                                                        "type": "variables_get",
+                                                                        "id": "b143",
+                                                                        "fields": {
+                                                                          "VAR": {
+                                                                            "id": "var-inicio"
+                                                                          }
+                                                                        }
+                                                                      },
+                                                                      "shadow": {
+                                                                        "type": "math_number",
+                                                                        "id": "s146",
+                                                                        "fields": {
+                                                                          "NUM": 0
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                },
+                                                                "shadow": {
+                                                                  "type": "math_number",
+                                                                  "id": "s148",
+                                                                  "fields": {
+                                                                    "NUM": 0
+                                                                  }
+                                                                }
+                                                              },
+                                                              "B": {
+                                                                "shadow": {
+                                                                  "type": "math_number",
+                                                                  "id": "s149",
+                                                                  "fields": {
+                                                                    "NUM": 1000
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          },
+                                                          "shadow": {
+                                                            "type": "text",
+                                                            "id": "s14b",
+                                                            "fields": {
+                                                              "TEXT": ""
+                                                            }
+                                                          }
+                                                        },
+                                                        "B": {
+                                                          "shadow": {
+                                                            "type": "text",
+                                                            "id": "s14c",
+                                                            "fields": {
+                                                              "TEXT": " s"
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    },
+                                                    "shadow": {
+                                                      "type": "text",
+                                                      "id": "s14f",
+                                                      "fields": {
+                                                        "TEXT": ""
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              "shadow": {
+                                                "type": "text",
+                                                "id": "s14i",
+                                                "fields": {
+                                                  "TEXT": ""
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "text",
+                                          "id": "s14k",
+                                          "fields": {
+                                            "TEXT": ""
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "next": {
+                            "block": {
+                              "type": "variables_set",
+                              "id": "b14n",
+                              "fields": {
+                                "VAR": {
+                                  "id": "var-inicio"
+                                }
+                              },
+                              "inputs": {
+                                "VALUE": {
+                                  "block": {
+                                    "type": "tp_time",
+                                    "id": "b14m"
+                                  },
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s14o",
+                                    "fields": {
+                                      "NUM": 0
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "controls_if",
+                    "id": "b14u",
+                    "extraState": {
+                      "elseIfCount": 0,
+                      "hasElse": false
+                    },
+                    "inputs": {
+                      "IF0": {
+                        "block": {
+                          "type": "logic_negate",
+                          "id": "b14r",
+                          "inputs": {
+                            "BOOL": {
+                              "block": {
+                                "type": "tp_sign_is",
+                                "id": "b14q",
+                                "fields": {
+                                  "LABEL": "claxon"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "DO0": {
+                        "block": {
+                          "type": "variables_set",
+                          "id": "b14s",
+                          "fields": {
+                            "VAR": {
+                              "id": "var-vista"
+                            }
+                          },
+                          "inputs": {
+                            "VALUE": {
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "s14t",
+                                "fields": {
+                                  "NUM": 0
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "controls_if",
+                        "id": "b15a",
+                        "extraState": {
+                          "elseIfCount": 2,
+                          "hasElse": true
+                        },
+                        "inputs": {
+                          "IF0": {
+                            "block": {
+                              "type": "logic_operation",
+                              "id": "b14x",
+                              "fields": {
+                                "OP": "AND"
+                              },
+                              "inputs": {
+                                "A": {
+                                  "block": {
+                                    "type": "tp_line",
+                                    "id": "b14v",
+                                    "fields": {
+                                      "SIDE": "L",
+                                      "COLOR": "black"
+                                    }
+                                  }
+                                },
+                                "B": {
+                                  "block": {
+                                    "type": "tp_line",
+                                    "id": "b14w",
+                                    "fields": {
+                                      "SIDE": "R",
+                                      "COLOR": "black"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "DO0": {
+                            "block": {
+                              "type": "tp_motors",
+                              "id": "b14y",
+                              "inputs": {
+                                "LEFT": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s14z",
+                                    "fields": {
+                                      "NUM": 150
+                                    }
+                                  }
+                                },
+                                "RIGHT": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s150",
+                                    "fields": {
+                                      "NUM": 150
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "IF1": {
+                            "block": {
+                              "type": "tp_line",
+                              "id": "b151",
+                              "fields": {
+                                "SIDE": "L",
+                                "COLOR": "black"
+                              }
+                            }
+                          },
+                          "DO1": {
+                            "block": {
+                              "type": "tp_motors",
+                              "id": "b152",
+                              "inputs": {
+                                "LEFT": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s153",
+                                    "fields": {
+                                      "NUM": 23
+                                    }
+                                  }
+                                },
+                                "RIGHT": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s154",
+                                    "fields": {
+                                      "NUM": 150
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "IF2": {
+                            "block": {
+                              "type": "tp_line",
+                              "id": "b155",
+                              "fields": {
+                                "SIDE": "R",
+                                "COLOR": "black"
+                              }
+                            }
+                          },
+                          "DO2": {
+                            "block": {
+                              "type": "tp_motors",
+                              "id": "b156",
+                              "inputs": {
+                                "LEFT": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s157",
+                                    "fields": {
+                                      "NUM": 150
+                                    }
+                                  }
+                                },
+                                "RIGHT": {
+                                  "shadow": {
+                                    "type": "math_number",
+                                    "id": "s158",
+                                    "fields": {
+                                      "NUM": 23
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "ELSE": {
+                            "block": {
+                              "type": "tp_stop",
+                              "id": "b159"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": [
+      {
+        "name": "vista",
+        "id": "var-vista"
+      },
+      {
+        "name": "inicio",
+        "id": "var-inicio"
+      },
+      {
+        "name": "vueltas",
+        "id": "var-vueltas"
+      }
+    ]
+  },
+  "escenario": {
+    "version": 1,
+    "id": "basica",
+    "name": "Pista básica",
+    "cols": 6,
+    "rows": 4,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "curve",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      }
+    ],
+    "objects": [
+      {
+        "id": "s-marca",
+        "kind": "sign",
+        "sign": "claxon",
+        "x": 130,
+        "y": 93,
+        "facing": 3.141592653589793
+      }
+    ],
+    "zones": [],
+    "start": {
+      "x": 40,
+      "y": 105,
+      "heading": 0
+    }
+  }
+}

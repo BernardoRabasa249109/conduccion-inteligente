@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conducción Inteligente — Laboratorio Tiny Pro</title>
+    <meta name="description" content="Simulador educativo del robot Yahboom Tiny:bit Pro con micro:bit y módulo de visión K210." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1020'/%3E%3Ccircle cx='10' cy='22' r='5' fill='%2322d3ee'/%3E%3Ccircle cx='22' cy='22' r='5' fill='%23d946ef'/%3E%3Crect x='9' y='6' width='14' height='9' rx='2' fill='%23fbbf24'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Solo se ve si el simulador no arranca: este index.html es el código fuente (necesita el servidor de desarrollo). La aplicación lo quita al cargar. -->
+      <div style="max-width:640px;margin:12vh auto;padding:28px 32px;border-radius:16px;background:#111a33;color:#e2e8f0;font:18px/1.55 system-ui,'Segoe UI',sans-serif;border:2px solid #f59e0b;opacity:0;animation:aviso 0.3s 1.5s forwards">
+        <style>@keyframes aviso{to{opacity:1}}</style>
+        <h1 style="margin:0 0 12px;font-size:24px;color:#fbbf24">Este no es el archivo para abrir el simulador</h1>
+        <p style="margin:0 0 10px">Este <b>index.html</b> es el código fuente y no funciona con doble clic.</p>
+        <p style="margin:0">Para usar el simulador, haz doble clic en <b>«Abrir simulador.bat»</b>, o abre la carpeta <b>dist</b> y haz doble clic en el <b>index.html</b> que está dentro.</p>
+      </div>
+    </div>
+    <noscript>Esta aplicación necesita JavaScript activado.</noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

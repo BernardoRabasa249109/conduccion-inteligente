@@ -1,0 +1,59 @@
+SEMÁFORO 3D — MODELO Y VISOR
+
+1. VER EL MODELO
+Extrae el ZIP y abre Semaforo_3D.html con Chrome, Edge o Firefox.
+La página contiene la biblioteca gráfica y las mallas: no requiere internet,
+instalaciones ni servidor. Necesita WebGL habilitado en el navegador.
+También puedes copiar solamente el HTML a otra computadora.
+
+Arrastra para girar. Usa la rueda o pellizca con dos dedos para acercarte.
+Incluye vistas frontal, trasera, lateral e isométrica, giro automático,
+vista de malla y botones para encender una luz. Comienza con todas apagadas.
+Los botones de luces afectan únicamente la visualización; los modelos
+exportados tienen las tres luces apagadas.
+
+2. QUÉ ARCHIVO USAR
+modelos/semaforo.glb: recomendado para plataformas web y entornos 3D que
+acepten glTF. Incluye geometría y materiales en un solo archivo.
+
+modelos/semaforo.obj + modelos/semaforo.mtl: importación a programas 3D.
+Mantén ambos en la misma carpeta. El OBJ contiene las piezas; el MTL,
+sus colores y materiales. No necesita texturas externas.
+
+modelos/semaforo.stl: geometría triangulada, sin colores ni materiales,
+como corresponde al formato STL. Es un conjunto ensamblado de superficies
+cerradas que se intersecan: no se ha unido en un único sólido ni validado
+para impresión. Si vas a imprimirlo, adapta la escala, realiza la unión
+de sólidos y revisa soportes y espesores en tu programa de fabricación.
+
+modelos/semaforo.blend: archivo editable de Blender, con piezas separadas,
+materiales, cámara, luces y suelo para el render. El suelo, las luces y la
+cámara no están incluidos en los archivos OBJ, STL o GLB.
+
+3. ESCALA Y ORIENTACIÓN
+Es una reconstrucción visual aproximada de la imagen de referencia,
+no un plano de ingeniería del producto real.
+Altura de diseño: 300 mm. Base: diámetro 104 mm.
+OBJ y STL: coordenadas en milímetros; eje Z vertical.
+GLB: metros, conforme a glTF; eje Y vertical; altura 0.3 m.
+El visor utiliza Y vertical y frente +Z; su escala se muestra en milímetros.
+OBJ/STL no codifican de forma universal unidades: selecciona mm al importar.
+
+4. PIEZAS Y MATERIALES
+Carcasa redondeada, marco frontal, placa trasera, tornillos, tres viseras,
+aros, juntas, lentes con pequeñas celdas ópticas, poste, collarines y base.
+Las piezas ópticas se nombran por color: roja, ambar y verde.
+Siete materiales principales; ninguna lente tiene emisión en los archivos.
+Unas 63 mil caras triangulares en el STL.
+
+5. FUENTES
+fuentes/crear_semaforo.py: generador para Blender 4.3.
+fuentes/mallas.json: geometría incrustada en el visor.
+fuentes/visor_template.html: plantilla del visor.
+fuentes/verificacion_modelos.json: resultado de reimportar OBJ, STL y GLB.
+THREE-LICENSE.txt: licencia MIT de Three.js, incluido en el HTML (r160).
+
+Se verificaron la exportación y reimportación de los tres formatos,
+sus escalas y materiales. El visor contiene todos sus recursos y se
+revisó su código; no se pudo completar la prueba visual en navegador
+por una restricción de acceso a archivos locales del entorno de revisión.

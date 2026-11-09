@@ -1,0 +1,1015 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Elegir el giro en el siguiente cruce",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_on_start",
+          "id": "hb5",
+          "x": 20,
+          "y": 20,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "variables_set",
+                "id": "bb1",
+                "fields": {
+                  "VAR": {
+                    "id": "var-giro"
+                  }
+                },
+                "inputs": {
+                  "VALUE": {
+                    "block": {
+                      "type": "text",
+                      "id": "bb2",
+                      "fields": {
+                        "TEXT": "ninguno"
+                      }
+                    },
+                    "shadow": {
+                      "type": "math_number",
+                      "id": "sb3",
+                      "fields": {
+                        "NUM": 0
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "tp_state_set",
+                    "id": "bb4",
+                    "fields": {
+                      "STATE": "SEGUIR_LINEA"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "tp_forever",
+          "id": "hd6",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "controls_if",
+                "id": "bba",
+                "extraState": {
+                  "elseIfCount": 0,
+                  "hasElse": false
+                },
+                "inputs": {
+                  "IF0": {
+                    "block": {
+                      "type": "tp_sign_is",
+                      "id": "bb6",
+                      "fields": {
+                        "LABEL": "izquierda"
+                      }
+                    }
+                  },
+                  "DO0": {
+                    "block": {
+                      "type": "variables_set",
+                      "id": "bb7",
+                      "fields": {
+                        "VAR": {
+                          "id": "var-giro"
+                        }
+                      },
+                      "inputs": {
+                        "VALUE": {
+                          "block": {
+                            "type": "text",
+                            "id": "bb8",
+                            "fields": {
+                              "TEXT": "izquierda"
+                            }
+                          },
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "sb9",
+                            "fields": {
+                              "NUM": 0
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "controls_if",
+                    "id": "bbf",
+                    "extraState": {
+                      "elseIfCount": 0,
+                      "hasElse": false
+                    },
+                    "inputs": {
+                      "IF0": {
+                        "block": {
+                          "type": "tp_sign_is",
+                          "id": "bbb",
+                          "fields": {
+                            "LABEL": "derecha"
+                          }
+                        }
+                      },
+                      "DO0": {
+                        "block": {
+                          "type": "variables_set",
+                          "id": "bbc",
+                          "fields": {
+                            "VAR": {
+                              "id": "var-giro"
+                            }
+                          },
+                          "inputs": {
+                            "VALUE": {
+                              "block": {
+                                "type": "text",
+                                "id": "bbd",
+                                "fields": {
+                                  "TEXT": "derecha"
+                                }
+                              },
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "sbe",
+                                "fields": {
+                                  "NUM": 0
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "controls_if",
+                        "id": "bd5",
+                        "extraState": {
+                          "elseIfCount": 1,
+                          "hasElse": true
+                        },
+                        "inputs": {
+                          "IF0": {
+                            "block": {
+                              "type": "tp_state_is",
+                              "id": "bbg",
+                              "fields": {
+                                "STATE": "GIRAR"
+                              }
+                            }
+                          },
+                          "DO0": {
+                            "block": {
+                              "type": "controls_if",
+                              "id": "bbv",
+                              "extraState": {
+                                "elseIfCount": 0,
+                                "hasElse": false
+                              },
+                              "inputs": {
+                                "IF0": {
+                                  "block": {
+                                    "type": "logic_operation",
+                                    "id": "bbo",
+                                    "fields": {
+                                      "OP": "AND"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "logic_compare",
+                                          "id": "bbi",
+                                          "fields": {
+                                            "OP": "GT"
+                                          },
+                                          "inputs": {
+                                            "A": {
+                                              "block": {
+                                                "type": "tp_state_time",
+                                                "id": "bbh"
+                                              },
+                                              "shadow": {
+                                                "type": "math_number",
+                                                "id": "sbj",
+                                                "fields": {
+                                                  "NUM": 0
+                                                }
+                                              }
+                                            },
+                                            "B": {
+                                              "shadow": {
+                                                "type": "math_number",
+                                                "id": "sbk",
+                                                "fields": {
+                                                  "NUM": 150
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "logic_operation",
+                                          "id": "bbn",
+                                          "fields": {
+                                            "OP": "OR"
+                                          },
+                                          "inputs": {
+                                            "A": {
+                                              "block": {
+                                                "type": "tp_line",
+                                                "id": "bbl",
+                                                "fields": {
+                                                  "SIDE": "L",
+                                                  "COLOR": "black"
+                                                }
+                                              }
+                                            },
+                                            "B": {
+                                              "block": {
+                                                "type": "tp_line",
+                                                "id": "bbm",
+                                                "fields": {
+                                                  "SIDE": "R",
+                                                  "COLOR": "black"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "DO0": {
+                                  "block": {
+                                    "type": "variables_set",
+                                    "id": "bbp",
+                                    "fields": {
+                                      "VAR": {
+                                        "id": "var-giro"
+                                      }
+                                    },
+                                    "inputs": {
+                                      "VALUE": {
+                                        "block": {
+                                          "type": "text",
+                                          "id": "bbq",
+                                          "fields": {
+                                            "TEXT": "ninguno"
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sbr",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "next": {
+                                      "block": {
+                                        "type": "tp_state_set",
+                                        "id": "bbs",
+                                        "fields": {
+                                          "STATE": "SEGUIR_LINEA"
+                                        },
+                                        "next": {
+                                          "block": {
+                                            "type": "tp_decide",
+                                            "id": "bbt",
+                                            "inputs": {
+                                              "TEXT": {
+                                                "shadow": {
+                                                  "type": "text",
+                                                  "id": "sbu",
+                                                  "fields": {
+                                                    "TEXT": "Encontré la nueva calle: olvido la flecha"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "IF1": {
+                            "block": {
+                              "type": "logic_operation",
+                              "id": "bby",
+                              "fields": {
+                                "OP": "AND"
+                              },
+                              "inputs": {
+                                "A": {
+                                  "block": {
+                                    "type": "tp_line",
+                                    "id": "bbw",
+                                    "fields": {
+                                      "SIDE": "L",
+                                      "COLOR": "white"
+                                    }
+                                  }
+                                },
+                                "B": {
+                                  "block": {
+                                    "type": "tp_line",
+                                    "id": "bbx",
+                                    "fields": {
+                                      "SIDE": "R",
+                                      "COLOR": "white"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "DO1": {
+                            "block": {
+                              "type": "controls_if",
+                              "id": "bco",
+                              "extraState": {
+                                "elseIfCount": 1,
+                                "hasElse": true
+                              },
+                              "inputs": {
+                                "IF0": {
+                                  "block": {
+                                    "type": "logic_compare",
+                                    "id": "bc0",
+                                    "fields": {
+                                      "OP": "EQ"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "variables_get",
+                                          "id": "bbz",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "var-giro"
+                                            }
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sc1",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "text",
+                                          "id": "bc2",
+                                          "fields": {
+                                            "TEXT": "izquierda"
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sc3",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "DO0": {
+                                  "block": {
+                                    "type": "tp_state_set",
+                                    "id": "bc4",
+                                    "fields": {
+                                      "STATE": "GIRAR"
+                                    },
+                                    "next": {
+                                      "block": {
+                                        "type": "tp_motors",
+                                        "id": "bc5",
+                                        "inputs": {
+                                          "LEFT": {
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "sc6",
+                                              "fields": {
+                                                "NUM": -90
+                                              }
+                                            }
+                                          },
+                                          "RIGHT": {
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "sc7",
+                                              "fields": {
+                                                "NUM": 110
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "next": {
+                                          "block": {
+                                            "type": "tp_decide",
+                                            "id": "bc8",
+                                            "inputs": {
+                                              "TEXT": {
+                                                "shadow": {
+                                                  "type": "text",
+                                                  "id": "sc9",
+                                                  "fields": {
+                                                    "TEXT": "Fin de la calle: giro a la izquierda porque vi la flecha"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "IF1": {
+                                  "block": {
+                                    "type": "logic_compare",
+                                    "id": "bcb",
+                                    "fields": {
+                                      "OP": "EQ"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "variables_get",
+                                          "id": "bca",
+                                          "fields": {
+                                            "VAR": {
+                                              "id": "var-giro"
+                                            }
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "scc",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "text",
+                                          "id": "bcd",
+                                          "fields": {
+                                            "TEXT": "derecha"
+                                          }
+                                        },
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sce",
+                                          "fields": {
+                                            "NUM": 0
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "DO1": {
+                                  "block": {
+                                    "type": "tp_state_set",
+                                    "id": "bcf",
+                                    "fields": {
+                                      "STATE": "GIRAR"
+                                    },
+                                    "next": {
+                                      "block": {
+                                        "type": "tp_motors",
+                                        "id": "bcg",
+                                        "inputs": {
+                                          "LEFT": {
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "sch",
+                                              "fields": {
+                                                "NUM": 110
+                                              }
+                                            }
+                                          },
+                                          "RIGHT": {
+                                            "shadow": {
+                                              "type": "math_number",
+                                              "id": "sci",
+                                              "fields": {
+                                                "NUM": -90
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "next": {
+                                          "block": {
+                                            "type": "tp_decide",
+                                            "id": "bcj",
+                                            "inputs": {
+                                              "TEXT": {
+                                                "shadow": {
+                                                  "type": "text",
+                                                  "id": "sck",
+                                                  "fields": {
+                                                    "TEXT": "Fin de la calle: giro a la derecha porque vi la flecha"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "ELSE": {
+                                  "block": {
+                                    "type": "tp_stop",
+                                    "id": "bcl",
+                                    "next": {
+                                      "block": {
+                                        "type": "tp_decide",
+                                        "id": "bcm",
+                                        "inputs": {
+                                          "TEXT": {
+                                            "shadow": {
+                                              "type": "text",
+                                              "id": "scn",
+                                              "fields": {
+                                                "TEXT": "Fin de la calle y no recuerdo ninguna flecha: me detengo"
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "ELSE": {
+                            "block": {
+                              "type": "controls_if",
+                              "id": "bd4",
+                              "extraState": {
+                                "elseIfCount": 2,
+                                "hasElse": true
+                              },
+                              "inputs": {
+                                "IF0": {
+                                  "block": {
+                                    "type": "logic_operation",
+                                    "id": "bcr",
+                                    "fields": {
+                                      "OP": "AND"
+                                    },
+                                    "inputs": {
+                                      "A": {
+                                        "block": {
+                                          "type": "tp_line",
+                                          "id": "bcp",
+                                          "fields": {
+                                            "SIDE": "L",
+                                            "COLOR": "black"
+                                          }
+                                        }
+                                      },
+                                      "B": {
+                                        "block": {
+                                          "type": "tp_line",
+                                          "id": "bcq",
+                                          "fields": {
+                                            "SIDE": "R",
+                                            "COLOR": "black"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "DO0": {
+                                  "block": {
+                                    "type": "tp_motors",
+                                    "id": "bcs",
+                                    "inputs": {
+                                      "LEFT": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sct",
+                                          "fields": {
+                                            "NUM": 140
+                                          }
+                                        }
+                                      },
+                                      "RIGHT": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "scu",
+                                          "fields": {
+                                            "NUM": 140
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "IF1": {
+                                  "block": {
+                                    "type": "tp_line",
+                                    "id": "bcv",
+                                    "fields": {
+                                      "SIDE": "L",
+                                      "COLOR": "black"
+                                    }
+                                  }
+                                },
+                                "DO1": {
+                                  "block": {
+                                    "type": "tp_motors",
+                                    "id": "bcw",
+                                    "inputs": {
+                                      "LEFT": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "scx",
+                                          "fields": {
+                                            "NUM": 21
+                                          }
+                                        }
+                                      },
+                                      "RIGHT": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "scy",
+                                          "fields": {
+                                            "NUM": 140
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "IF2": {
+                                  "block": {
+                                    "type": "tp_line",
+                                    "id": "bcz",
+                                    "fields": {
+                                      "SIDE": "R",
+                                      "COLOR": "black"
+                                    }
+                                  }
+                                },
+                                "DO2": {
+                                  "block": {
+                                    "type": "tp_motors",
+                                    "id": "bd0",
+                                    "inputs": {
+                                      "LEFT": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sd1",
+                                          "fields": {
+                                            "NUM": 140
+                                          }
+                                        }
+                                      },
+                                      "RIGHT": {
+                                        "shadow": {
+                                          "type": "math_number",
+                                          "id": "sd2",
+                                          "fields": {
+                                            "NUM": 21
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                "ELSE": {
+                                  "block": {
+                                    "type": "tp_stop",
+                                    "id": "bd3"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": [
+      {
+        "name": "giro",
+        "id": "var-giro"
+      }
+    ]
+  },
+  "escenario": {
+    "version": 1,
+    "id": "ciudad",
+    "name": "Ciudad con señales y semáforo",
+    "cols": 6,
+    "rows": 5,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "tee",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 3,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "tee",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 2,
+        "type": "cross",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 2,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "tee",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 4,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 4,
+        "type": "tee",
+        "rot": 2
+      },
+      {
+        "c": 4,
+        "r": 4,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 4,
+        "type": "curve",
+        "rot": 3
+      }
+    ],
+    "objects": [
+      {
+        "id": "s-p2",
+        "kind": "sign",
+        "sign": "p2",
+        "x": 113,
+        "y": 123,
+        "facing": 0
+      },
+      {
+        "id": "s-p1",
+        "kind": "sign",
+        "sign": "p1",
+        "x": 66,
+        "y": 123,
+        "facing": 0
+      },
+      {
+        "id": "s-claxon",
+        "kind": "sign",
+        "sign": "claxon",
+        "x": 27,
+        "y": 86,
+        "facing": 1.5707963267948966
+      },
+      {
+        "id": "s-30",
+        "kind": "sign",
+        "sign": "limite30",
+        "x": 74,
+        "y": 27,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "semaforo",
+        "kind": "light",
+        "x": 88,
+        "y": 27,
+        "facing": 3.141592653589793,
+        "state": "rojo",
+        "cycle": {
+          "auto": true,
+          "rojo": 6,
+          "verde": 7,
+          "amarillo": 2
+        }
+      },
+      {
+        "id": "s-fin30",
+        "kind": "sign",
+        "sign": "fin30",
+        "x": 148,
+        "y": 27,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "s-izq",
+        "kind": "sign",
+        "sign": "izquierda",
+        "x": 116,
+        "y": 50,
+        "facing": 1.5707963267948966
+      },
+      {
+        "id": "s-der",
+        "kind": "sign",
+        "sign": "derecha",
+        "x": 140,
+        "y": 87,
+        "facing": 3.141592653589793
+      },
+      {
+        "id": "caja-1",
+        "kind": "obstacle",
+        "shape": "caja",
+        "x": 55,
+        "y": 75,
+        "w": 8,
+        "d": 8,
+        "h": 8,
+        "rot": 0
+      }
+    ],
+    "zones": [
+      {
+        "id": "zona-30",
+        "kind": "slow",
+        "label": "30",
+        "x": 78,
+        "y": 6,
+        "w": 40,
+        "d": 18
+      },
+      {
+        "id": "plaza-1",
+        "kind": "parking",
+        "label": "1",
+        "x": 72,
+        "y": 104,
+        "w": 15,
+        "d": 22
+      },
+      {
+        "id": "plaza-2",
+        "kind": "parking",
+        "label": "2",
+        "x": 118,
+        "y": 104,
+        "w": 15,
+        "d": 22
+      }
+    ],
+    "start": {
+      "x": 105,
+      "y": 118,
+      "heading": -1.5707963267948966
+    }
+  }
+}

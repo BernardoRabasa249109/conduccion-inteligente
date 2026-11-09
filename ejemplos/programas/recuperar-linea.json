@@ -1,0 +1,537 @@
+{
+  "tipo": "conduccion-inteligente-proyecto",
+  "version": 1,
+  "nombre": "Recuperar la línea perdida",
+  "fecha": "2026-11-03T00:00:00.000Z",
+  "practica": null,
+  "programa": {
+    "blocks": {
+      "languageVersion": 0,
+      "blocks": [
+        {
+          "type": "tp_on_start",
+          "id": "h1y",
+          "x": 20,
+          "y": 20,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "variables_set",
+                "id": "b1v",
+                "fields": {
+                  "VAR": {
+                    "id": "var-ultimoLado"
+                  }
+                },
+                "inputs": {
+                  "VALUE": {
+                    "block": {
+                      "type": "text",
+                      "id": "b1w",
+                      "fields": {
+                        "TEXT": "izquierda"
+                      }
+                    },
+                    "shadow": {
+                      "type": "math_number",
+                      "id": "s1x",
+                      "fields": {
+                        "NUM": 0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "tp_forever",
+          "id": "h32",
+          "x": 20,
+          "y": 260,
+          "inputs": {
+            "DO": {
+              "block": {
+                "type": "controls_if",
+                "id": "b31",
+                "extraState": {
+                  "elseIfCount": 2,
+                  "hasElse": true
+                },
+                "inputs": {
+                  "IF0": {
+                    "block": {
+                      "type": "logic_operation",
+                      "id": "b21",
+                      "fields": {
+                        "OP": "AND"
+                      },
+                      "inputs": {
+                        "A": {
+                          "block": {
+                            "type": "tp_line",
+                            "id": "b1z",
+                            "fields": {
+                              "SIDE": "L",
+                              "COLOR": "black"
+                            }
+                          }
+                        },
+                        "B": {
+                          "block": {
+                            "type": "tp_line",
+                            "id": "b20",
+                            "fields": {
+                              "SIDE": "R",
+                              "COLOR": "black"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "DO0": {
+                    "block": {
+                      "type": "tp_motors",
+                      "id": "b22",
+                      "inputs": {
+                        "LEFT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "s23",
+                            "fields": {
+                              "NUM": 150
+                            }
+                          }
+                        },
+                        "RIGHT": {
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "s24",
+                            "fields": {
+                              "NUM": 150
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "tp_decide",
+                          "id": "b25",
+                          "inputs": {
+                            "TEXT": {
+                              "shadow": {
+                                "type": "text",
+                                "id": "s26",
+                                "fields": {
+                                  "TEXT": "Sigo la línea"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "IF1": {
+                    "block": {
+                      "type": "tp_line",
+                      "id": "b27",
+                      "fields": {
+                        "SIDE": "L",
+                        "COLOR": "black"
+                      }
+                    }
+                  },
+                  "DO1": {
+                    "block": {
+                      "type": "variables_set",
+                      "id": "b28",
+                      "fields": {
+                        "VAR": {
+                          "id": "var-ultimoLado"
+                        }
+                      },
+                      "inputs": {
+                        "VALUE": {
+                          "block": {
+                            "type": "text",
+                            "id": "b29",
+                            "fields": {
+                              "TEXT": "izquierda"
+                            }
+                          },
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "s2a",
+                            "fields": {
+                              "NUM": 0
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "tp_motors",
+                          "id": "b2b",
+                          "inputs": {
+                            "LEFT": {
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "s2c",
+                                "fields": {
+                                  "NUM": 20
+                                }
+                              }
+                            },
+                            "RIGHT": {
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "s2d",
+                                "fields": {
+                                  "NUM": 150
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "IF2": {
+                    "block": {
+                      "type": "tp_line",
+                      "id": "b2e",
+                      "fields": {
+                        "SIDE": "R",
+                        "COLOR": "black"
+                      }
+                    }
+                  },
+                  "DO2": {
+                    "block": {
+                      "type": "variables_set",
+                      "id": "b2f",
+                      "fields": {
+                        "VAR": {
+                          "id": "var-ultimoLado"
+                        }
+                      },
+                      "inputs": {
+                        "VALUE": {
+                          "block": {
+                            "type": "text",
+                            "id": "b2g",
+                            "fields": {
+                              "TEXT": "derecha"
+                            }
+                          },
+                          "shadow": {
+                            "type": "math_number",
+                            "id": "s2h",
+                            "fields": {
+                              "NUM": 0
+                            }
+                          }
+                        }
+                      },
+                      "next": {
+                        "block": {
+                          "type": "tp_motors",
+                          "id": "b2i",
+                          "inputs": {
+                            "LEFT": {
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "s2j",
+                                "fields": {
+                                  "NUM": 150
+                                }
+                              }
+                            },
+                            "RIGHT": {
+                              "shadow": {
+                                "type": "math_number",
+                                "id": "s2k",
+                                "fields": {
+                                  "NUM": 20
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "ELSE": {
+                    "block": {
+                      "type": "controls_if",
+                      "id": "b30",
+                      "extraState": {
+                        "elseIfCount": 0,
+                        "hasElse": true
+                      },
+                      "inputs": {
+                        "IF0": {
+                          "block": {
+                            "type": "logic_compare",
+                            "id": "b2m",
+                            "fields": {
+                              "OP": "EQ"
+                            },
+                            "inputs": {
+                              "A": {
+                                "block": {
+                                  "type": "variables_get",
+                                  "id": "b2l",
+                                  "fields": {
+                                    "VAR": {
+                                      "id": "var-ultimoLado"
+                                    }
+                                  }
+                                },
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s2n",
+                                  "fields": {
+                                    "NUM": 0
+                                  }
+                                }
+                              },
+                              "B": {
+                                "block": {
+                                  "type": "text",
+                                  "id": "b2o",
+                                  "fields": {
+                                    "TEXT": "izquierda"
+                                  }
+                                },
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s2p",
+                                  "fields": {
+                                    "NUM": 0
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "DO0": {
+                          "block": {
+                            "type": "tp_motors",
+                            "id": "b2q",
+                            "inputs": {
+                              "LEFT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s2r",
+                                  "fields": {
+                                    "NUM": -70
+                                  }
+                                }
+                              },
+                              "RIGHT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s2s",
+                                  "fields": {
+                                    "NUM": 110
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b2t",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s2u",
+                                      "fields": {
+                                        "TEXT": "Perdí la línea: la busco a la izquierda, donde la vi por última vez"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "ELSE": {
+                          "block": {
+                            "type": "tp_motors",
+                            "id": "b2v",
+                            "inputs": {
+                              "LEFT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s2w",
+                                  "fields": {
+                                    "NUM": 110
+                                  }
+                                }
+                              },
+                              "RIGHT": {
+                                "shadow": {
+                                  "type": "math_number",
+                                  "id": "s2x",
+                                  "fields": {
+                                    "NUM": -70
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "tp_decide",
+                                "id": "b2y",
+                                "inputs": {
+                                  "TEXT": {
+                                    "shadow": {
+                                      "type": "text",
+                                      "id": "s2z",
+                                      "fields": {
+                                        "TEXT": "Perdí la línea: la busco a la derecha, donde la vi por última vez"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "variables": [
+      {
+        "name": "ultimoLado",
+        "id": "var-ultimoLado"
+      }
+    ]
+  },
+  "escenario": {
+    "version": 1,
+    "id": "basica",
+    "name": "Pista básica",
+    "cols": 6,
+    "rows": 4,
+    "tile": 30,
+    "tiles": [
+      {
+        "c": 0,
+        "r": 0,
+        "type": "curve",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 0,
+        "type": "curve",
+        "rot": 2
+      },
+      {
+        "c": 0,
+        "r": 3,
+        "type": "curve",
+        "rot": 0
+      },
+      {
+        "c": 5,
+        "r": 3,
+        "type": "curve",
+        "rot": 3
+      },
+      {
+        "c": 1,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 1,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 2,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 3,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 0,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 4,
+        "r": 3,
+        "type": "straight",
+        "rot": 0
+      },
+      {
+        "c": 0,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 1,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 0,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      },
+      {
+        "c": 5,
+        "r": 2,
+        "type": "straight",
+        "rot": 1
+      }
+    ],
+    "objects": [],
+    "zones": [],
+    "start": {
+      "x": 40,
+      "y": 105,
+      "heading": 0
+    }
+  }
+}
