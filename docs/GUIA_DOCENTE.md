@@ -13,8 +13,8 @@ Colores fijos en toda la aplicación (pantalla, escena 3D y bloques): **cian = p
 
 ## Antes de la clase
 
-1. Abre `dist/index.html` en el equipo del aula y en uno de prueba.
-2. En **Ajustes** (engranaje) activa **Modo docente** en tu equipo: desbloquea todas las prácticas y abre las soluciones sin confirmar. En los equipos del alumnado déjalo apagado: las prácticas se desbloquean en orden.
+1. Abre la versión pública (la de Vercel, o `dist/index.html`) en el equipo del aula y en uno de prueba.
+2. En tu equipo, usa la **versión del docente** (ver abajo) para ver las soluciones y abrir cualquier práctica. En la versión pública las prácticas se desbloquean en orden y no hay soluciones.
 3. El **modo avanzado** añade el control de cada motor, ruido y retraso de sensores. Úsalo cuando el grupo ya domine el modo predecible.
 
 ## Recorrido sugerido de la primera sesión (50 min)
@@ -68,14 +68,30 @@ Las prácticas muestran solo las categorías que necesitan; en el modo libre apa
 - Cinco ejemplos de refuerzo (pista básica): **Sensor de estacionamiento** (convertir la distancia en velocidad y en color de los faros), **Media vuelta ante un obstáculo** (estado Girar), **Cronómetro de vuelta** (tiempo desde el inicio y una variable que recuerda cuándo empezó la vuelta), **Cambiar la velocidad con los botones** (A cambia entre tres velocidades, B pausa) y **Rodear un obstáculo y volver a la línea** (maniobra por tiempos: en el robot real hay que calibrarlos). Los cuatro que no usan visión se exportan a MakeCode.
 - «Seguidor inteligente: flechas, semáforo y obstáculos» (escenario 3) junta todo con prioridades: 1) persona o caja a menos de 15 cm → alto; 2) semáforo en rojo → alto; 3) girando → buscar la calle nueva; 4) fin de la calle → girar hacia la última flecha vista; 5) seguir la línea. Antes, en cada vuelta, recuerda la flecha (variable «giro») y, con el amarillo, baja la velocidad poco a poco. Con dos sensores sobre la línea, un cruce en «+» se ve igual que una recta: el giro se hace donde se acaba la calle (un cruce en «T»). La cámara no reconoce personas ni cajas: eso lo detecta el ultrasonido. El amarillo es una ampliación educativa (el modelo oficial reconoce rojo y verde).
 
+## Versión pública y versión del docente
+
+Hay dos versiones del mismo simulador:
+
+| | Versión pública (GitHub y Vercel) | Versión del docente (solo en tu equipo) |
+|---|---|---|
+| Prácticas | Se desbloquean en orden | Las 25 abiertas (modo docente) |
+| Soluciones | No las tiene: no están ni en el código público | Botón «Ver solución» en cada práctica |
+| Verificar reportes de alumnos | No | Perfil → «Verificar el reporte de un alumno» |
+| Cómo se reconoce | — | Distintivo amarillo **DOCENTE** junto al nombre |
+
+- La versión del docente vive en la carpeta `docente/` del proyecto, que **nunca se sube** a GitHub ni a Vercel (está en `.gitignore`). Se abre con `docente/Abrir simulador docente.bat`. Las soluciones están en `docente/soluciones.ts`.
+- En la versión del docente, **Ajustes → Modo docente** (encendido de entrada) se puede apagar para ver el simulador exactamente como lo ve un alumno.
+- Después de cambiar el proyecto, vuelve a generar la versión del docente con `npm run build:docente` (la pública se genera con `npm run build`).
+- No copies la carpeta `docente/` ni su `simulador/index.html` a los equipos del alumnado.
+
 ## Perfil del alumno y calificaciones
 
 - **Registro**: botón **Perfil** (arriba a la derecha). El alumno escribe su correo de la escuela, su nombre y sus apellidos. Su avance (prácticas, calificaciones y programas) queda **ligado a su correo** en ese navegador: varios alumnos pueden usar el mismo equipo sin mezclar su avance («Cambiar de alumno»). Si en el navegador ya había avance sin perfil, el primer alumno que se registra puede pasarlo al suyo.
 - **Completar una práctica** exige dos cosas: que el robot lo demuestre (las comprobaciones) **y** contestar bien la pregunta «Antes de probar». Sin la pregunta, la práctica no se marca como completada y «Siguiente» no se activa.
-- **Calificación por práctica**: 10 al completarla; −1 por cada respuesta equivocada en «Antes de probar» (máximo −2); −0.5 por cada pista vista (máximo −1.5); −3 si vio la solución antes de completarla (no cuenta en modo docente). Mínimo 5.
+- **Calificación por práctica**: 10 al completarla; −1 por cada respuesta equivocada en «Antes de probar» (máximo −2); −0.5 por cada pista vista (máximo −1.5). Mínimo 5. (El alumnado ya no puede ver soluciones; si un registro anterior dice «vio la solución», esa práctica tiene −3.)
 - **En el perfil** se ven: prácticas completadas (de 25 y en %), promedio de las completadas, calificación general sobre las 25 (las pendientes cuentan 0) y la tabla de cada práctica con su calificación, fecha y detalle.
 - **Reporte para la plataforma de la escuela**: «Descargar mi avance (.txt)» crea un archivo con nombre, apellidos, correo, avance, promedio, calificación general y el detalle de cada práctica.
-- **El .txt se puede abrir y editar** (es texto). Por eso termina con un **código de verificación** calculado con todo su contenido: si alguien cambia una calificación, un nombre o cualquier letra, el código deja de coincidir. Para comprobarlo: activa el **modo docente** (Ajustes) → **Perfil** → «Verificar el reporte de un alumno» y elige el archivo. Protege contra cambios hechos a mano; no es una firma infalible.
+- **El .txt se puede abrir y editar** (es texto). Por eso termina con un **código de verificación** calculado con todo su contenido: si alguien cambia una calificación, un nombre o cualquier letra, el código deja de coincidir. Para comprobarlo: en la **versión del docente**, **Perfil** → «Verificar el reporte de un alumno» y elige el archivo (no hace falta registrar un perfil de alumno). Protege contra cambios hechos a mano; no es una firma infalible.
 - **Cambiar de equipo**: el alumno descarga su reporte y, en el otro equipo, entra con el mismo correo y usa «Cargar mi avance de otro equipo». Solo se carga un reporte válido y del mismo correo.
 
 ## Las 25 prácticas
@@ -108,9 +124,9 @@ Las prácticas muestran solo las categorías que necesitan; en el modo libre apa
 | 24 | Ordenar el programa con funciones | Programar | Tiene dos funciones y las llama; sigue la línea y se detiene ante la caja. |
 | 25 | El amarillo: frenar sin detenerse | Programar | Con el semáforo en amarillo va a menos de dos tercios de su velocidad, no se detiene y pasa. |
 
-Las prácticas 16 a 25 son de ampliación: la 16 se abre al completar la 1 y cada una de las siguientes, al completar la anterior (o todas, con el modo docente).
+Las prácticas 16 a 25 son de ampliación: la 16 se abre al completar la 1 y cada una de las siguientes, al completar la anterior (en la versión del docente, todas están abiertas).
 
-**Cambiar de sección cierra la ventana de la práctica**: si estás en «Prácticas» y pasas a Explorar, Conducir o Programar desde las pestañas de arriba, la ventana se oculta para no tapar esa sección. La práctica sigue activa (su número aparece en la pestaña «Prácticas») y la ventana vuelve al regresar a «Prácticas». Cuando es la propia práctica la que te lleva («Ir a Programar», «Ver solución»), la ventana te acompaña.
+**Cambiar de sección cierra la ventana de la práctica**: si estás en «Prácticas» y pasas a Explorar, Conducir o Programar desde las pestañas de arriba, la ventana se oculta para no tapar esa sección. La práctica sigue activa (su número aparece en la pestaña «Prácticas») y la ventana vuelve al regresar a «Prácticas». Cuando es la propia práctica la que te lleva («Ir a Programar» o, en la versión del docente, «Ver solución»), la ventana te acompaña.
 
 **Ventanas en modo práctica**: en «Prácticas» y en «Conducir», la ventana de la práctica queda arriba a la izquierda del escenario. En «Programar», donde el escenario es pequeño, la práctica no va encima del escenario: aparece plegada arriba del panel «Lo que lee el programa» (se despliega con su flecha). En los tres casos, la cámara K210 se fija en la esquina inferior derecha, al 90 % de su tamaño, para que no se encimen. En modo libre la cámara se puede mover y encoger como siempre, y vuelve al lugar donde la dejaste.
 
@@ -118,9 +134,9 @@ Las prácticas 16 a 25 son de ampliación: la 16 se abre al completar la 1 y cad
 
 **Reiniciar una práctica**: el botón circular a la derecha de cada práctica de la lista borra su avance (comprobaciones y marca de completada) y vuelve a su programa inicial, con confirmación. Las demás prácticas no cambian y las que ya estaban abiertas siguen abiertas.
 
-Cada práctica incluye: objetivo, escenario preparado, pregunta de predicción con explicación, programa inicial parcial (si procede), reto, tres pistas progresivas, comprobación en vivo y botón de solución (la solución se abre como ejemplo y no borra el programa del alumno).
+Cada práctica incluye: objetivo, escenario preparado, pregunta de predicción con explicación, programa inicial parcial (si procede), reto, tres pistas progresivas, comprobación en vivo. La solución solo está en la versión del docente: se abre como ejemplo y no borra el programa que había.
 
-Todas las soluciones se verifican automáticamente (`npm test`): la solución completa la práctica y el programa inicial **no** la completa.
+En el equipo del docente, `npm test` verifica que cada solución completa su práctica y que el programa inicial **no** la completa. Donde no está `docente/soluciones.ts` (por ejemplo, en GitHub), esas pruebas se omiten.
 
 ## Ideas para discutir
 

@@ -23,7 +23,7 @@ export interface PracticeRecord {
   prediccion: boolean;
   /** Pistas que llegó a ver. */
   pistas: number;
-  /** Vio la solución antes de completarla. */
+  /** Vio la solución antes de completarla (solo en registros de antes: la versión pública ya no muestra soluciones). */
   solucion: boolean;
   /** Fecha y hora en que la completó (ISO). */
   completada?: string;
@@ -34,7 +34,7 @@ export const emptyRecord = (): PracticeRecord => ({ intentos: 0, prediccion: fal
 
 /** Cómo se califica, con las mismas palabras en la pantalla y en el reporte. */
 export const GRADING_RULE =
-  "10 al completar la práctica; −1 por cada respuesta equivocada en «Antes de probar» (máximo −2); −0.5 por cada pista vista (máximo −1.5); −3 si vio la solución antes de completarla. Mínimo 5.";
+  "10 al completar la práctica; −1 por cada respuesta equivocada en «Antes de probar» (máximo −2); −0.5 por cada pista vista (máximo −1.5). Mínimo 5.";
 
 export function gradeOf(r: PracticeRecord): number {
   const fails = Math.max(0, r.intentos - 1);
@@ -159,7 +159,7 @@ export function buildReport(perfil: Profile, records: Record<number, PracticeRec
     "",
     `Cómo se califica: ${GRADING_RULE}`,
     "Este archivo lleva un código de verificación: si se modifica cualquier parte, el código deja de coincidir.",
-    "El docente lo comprueba en el simulador: Perfil del alumno → Verificar el reporte de un alumno (modo docente).",
+    "El docente lo comprueba con su versión del simulador.",
   );
   const data: ReportData = { v: 1, perfil, fecha: now.toISOString(), registros: Object.fromEntries(Object.entries(records).filter(([, r]) => r)) as Record<number, PracticeRecord> };
   const signed = `${lines.join("\n")}\n\nDATOS: ${toBase64(JSON.stringify(data))}`;

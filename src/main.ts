@@ -4,6 +4,7 @@ import { setStudentScope, store } from "./ui/dom";
 import type { Profile } from "./practices/perfil";
 
 const root = document.getElementById("app")!;
+if (__DOCENTE__) document.title = `${document.title} · DOCENTE`;
 // El avance (prácticas, calificaciones y programas) es del alumno que registró su perfil.
 setStudentScope(store.get<Profile | null>("alumno:actual", null)?.correo ?? null);
 // Quita el aviso de «este no es el archivo para abrir» que trae index.html.

@@ -56,6 +56,7 @@ function activate(p: Profile) {
 
 export async function openProfile(app: App): Promise<void> {
   const p = currentProfile();
+  if (!p && __DOCENTE__ && app.teacher) return teacherPanel(app);
   if (!p) return editProfile(app, null);
   const records = app.practices.records();
   const s = summarize(records);
@@ -100,7 +101,7 @@ export async function openProfile(app: App): Promise<void> {
     h("p", { class: "help" }, h("b", {}, "Cómo se califica: "), GRADING_RULE),
     h("p", { class: "help" }, "Tu avance se guarda en este navegador, ligado a tu correo. Para seguir en otro equipo, descarga tu avance y cárgalo allí con «Cargar mi avance de otro equipo»."),
   ];
-  if (app.teacher) {
+  if (__DOCENTE__ && app.teacher) {
     body.push(
       h("div", { class: "pf-teacher" },
         h("div", { class: "section-title" }, icon("check"), "Para el docente"),
@@ -215,6 +216,31 @@ async function importReport(app: App, p: Profile): Promise<void> {
 }
 
 /** Docente: comprueba un reporte y muestra su resumen. */
+/**
+ * Versión del docente sin alumno registrado: el docente no necesita un perfil
+ * de alumno para verificar los reportes que le entregan.
+ */
+async function teacherPanel(app: App): Promise<void> {
+  let close: (v: string) => void = () => {};
+  const res = await modal({
+    title: "Perfil · docente",
+    narrow: true,
+    body: [
+      h("p", { class: "help" }, "Comprueba que el reporte (.txt) de un alumno no se modificó y mira su resumen."),
+      h("div", { class: "row" }, btn("Verificar el reporte de un alumno", "check", () => close("verificar"), "primary")),
+      h("p", { class: "help", style: "margin-top:14px" }, "Para probar el simulador como un alumno, registra un perfil de prueba (o apaga el modo docente en Ajustes)."),
+      h("div", { class: "row" }, btn("Registrar un perfil de prueba", "person", () => close("registrar"), "small")),
+    ],
+    actions: [{ label: "Cerrar", value: "ok", cls: "primary" }],
+    onOpen: (c) => (close = c),
+  });
+  if (res === "registrar") return editProfile(app, null);
+  if (res === "verificar") {
+    await verifyFile();
+    return teacherPanel(app);
+  }
+}
+
 async function verifyFile() {
   const text = await pickFile(".txt");
   if (!text) return;

@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "docente": "vite --mode docente --port 5181 --strictPort",
     "build": "tsc --noEmit && vite build",
+    "build:docente": "tsc --noEmit && vite build --mode docente",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

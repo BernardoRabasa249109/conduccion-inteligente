@@ -33,7 +33,8 @@ export class App {
   editor: ScenarioEditor;
   tab: Tab = "conducir";
   advanced = store.get("advanced", false);
-  teacher = store.get("teacher", false);
+  /** Modo docente: solo existe en la versión del docente (local, con las soluciones). */
+  teacher = __DOCENTE__ && store.get("teacher", true);
   scenarioId = store.get("scenario", "basica");
   private workspaceEl: HTMLElement;
   private rightCol: HTMLElement;
@@ -81,7 +82,9 @@ export class App {
     this.editor = new ScenarioEditor(this);
 
     // Barra superior
-    const brand = h("div", { class: "brand" }, svgEl(LOGO), h("div", { class: "brand-text" }, h("strong", {}, "Conducción Inteligente"), h("span", {}, "Laboratorio Tiny Pro")));
+    const brand = h("div", { class: "brand" }, svgEl(LOGO), h("div", { class: "brand-text" }, h("strong", {}, "Conducción Inteligente"), h("span", {}, "Laboratorio Tiny Pro")),
+      __DOCENTE__ && h("span", { class: "docente-badge", title: "Versión del docente: solo en este equipo. Tiene el modo docente y las soluciones; no la compartas con el alumnado." }, "DOCENTE"),
+    );
     const tabs = h("nav", { class: "tabs", role: "tablist", "aria-label": "Espacios" });
     const defs: [Tab, string, keyof typeof ICON][] = [["explorar", "Explorar el robot", "explore"], ["conducir", "Conducir", "drive"], ["programar", "Programar", "code"], ["practicas", "Prácticas", "flag"]];
     for (const [id, label, ic] of defs) {
@@ -348,7 +351,7 @@ export class App {
       sw("advanced", "Modo avanzado", "Control de cada motor, editor de escenarios, ruido y retraso de sensores.", this.advanced),
       sw("noise", "Ruido en los sensores (avanzado)", "Lecturas imperfectas como en el robot real. El modo inicial es predecible.", store.get("noise", false)),
       h("div", { class: "switch" }, h("span", {}, h("b", {}, "Retraso de los sensores (avanzado)"), h("small", {}, "El programa recibe lecturas antiguas.")), h("div", { class: "row" }, delay, delayOut)),
-      sw("teacher", "Modo docente", "Desbloquea todas las prácticas y muestra las soluciones sin esperar.", this.teacher),
+      __DOCENTE__ && sw("teacher", "Modo docente", "Desbloquea todas las prácticas, muestra las soluciones y verifica los reportes de los alumnos. Apágalo para ver el simulador como un alumno.", this.teacher),
       sw("grid", "Cuadrícula de piezas en el tapete", "Ayuda a colocar piezas de pista. Solo se dibuja: no cambia lo que leen los sensores.", this.scene.showGrid),
     );
     const res = await modal({
@@ -370,9 +373,11 @@ export class App {
     if (res !== "ok") return;
     const get = (k: string) => (body.querySelector(`input[data-key="${k}"]`) as HTMLInputElement).checked;
     this.advanced = get("advanced");
-    this.teacher = get("teacher");
     store.set("advanced", this.advanced);
-    store.set("teacher", this.teacher);
+    if (__DOCENTE__) {
+      this.teacher = get("teacher");
+      store.set("teacher", this.teacher);
+    }
     store.set("noise", get("noise"));
     store.set("delay", Number(delay.value));
     this.scene.showGrid = get("grid");

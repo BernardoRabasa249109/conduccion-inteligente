@@ -1,3 +1,7 @@
+# Versión del docente: soluciones de las prácticas y simulador con modo docente.
+# Solo vive en el equipo del docente: NUNCA se sube a GitHub ni a Vercel.
+docente/
+
 # Dependencias
 node_modules/
 scripts/out/

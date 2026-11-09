@@ -4,13 +4,18 @@ import { chassisCenter } from "../src/core/robot";
 import { compileWorkspace } from "../src/program/compile";
 import { PRACTICES, practiceScenario } from "../src/practices/practices";
 import { done } from "../src/practices/checks";
+import { SOLUCIONES } from "@soluciones";
+import { SOLUCIONES as PUBLICAS } from "../src/practices/sinSoluciones";
+
+/** Las soluciones solo están en el equipo del docente (docente/soluciones.ts). */
+const conSoluciones = Object.keys(SOLUCIONES).length > 0;
 
 function runProgram(n: number, which: "solution" | "starter", secs = 60) {
   const p = PRACTICES[n - 1];
   const sim = new Sim(practiceScenario(p));
   const checker = p.checker();
   sim.observers.add((s) => checker.tick(s));
-  const prog = compileWorkspace((which === "solution" ? p.solution! : p.starter!)());
+  const prog = compileWorkspace((which === "solution" ? SOLUCIONES[n]!.solution! : p.starter!)());
   sim.loadProgram(prog);
   sim.runProgram();
   checker.program?.(prog);
@@ -22,7 +27,7 @@ const summary = (c: { items: { id: string; ok: boolean | null }[] }) => c.items.
 
 describe("las prácticas de programación comprueban comportamiento real", () => {
   for (const n of [5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 19, 20, 21, 22, 23, 24, 25]) {
-    it(`práctica ${n}: la solución la completa`, () => {
+    it.skipIf(!conSoluciones)(`práctica ${n}: la solución la completa`, () => {
       const { checker } = runProgram(n, "solution", 90);
       expect(done(checker), summary(checker)).toBe(true);
     });
@@ -132,9 +137,9 @@ describe("prácticas de ampliación (16–25)", () => {
     for (const [x, y] of [[45, 40], [135, 40], [150, 60]]) driveTo(sim, x, y, 12);
     expect(done(checker)).toBe(false);
   });
-  it("práctica 18: espera, arranca con A y se detiene con B", () => {
+  it.skipIf(!conSoluciones)("práctica 18: espera, arranca con A y se detiene con B", () => {
     const { p, sim, checker } = start(18);
-    const prog = compileWorkspace(p.solution!());
+    const prog = compileWorkspace(SOLUCIONES[p.n]!.solution!());
     sim.loadProgram(prog);
     sim.runProgram();
     run(sim, 2);
@@ -159,3 +164,13 @@ describe("prácticas de ampliación (16–25)", () => {
 });
 
 it("chassis helper exists", () => expect(chassisCenter({ x: 0, y: 0, heading: 0 })[0]).toBeGreaterThan(0));
+
+describe("las soluciones son solo del docente", () => {
+  it("la versión pública no lleva soluciones ni las prácticas las incluyen", () => {
+    expect(PUBLICAS).toEqual({});
+    for (const p of PRACTICES) expect(Object.keys(p).filter((k) => k.startsWith("solution")), `práctica ${p.n}`).toEqual([]);
+  });
+  it.skipIf(!conSoluciones)("la versión del docente tiene la solución de las 25 prácticas", () => {
+    for (const p of PRACTICES) expect(SOLUCIONES[p.n]?.solution ?? SOLUCIONES[p.n]?.solutionText, `práctica ${p.n}`).toBeTruthy();
+  });
+});

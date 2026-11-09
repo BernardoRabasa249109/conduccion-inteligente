@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { compileWorkspace } from "../src/program/compile";
 import { EXAMPLES } from "../src/program/examples";
 import { exportMakeCode } from "../src/program/makecode";
-import { PRACTICES } from "../src/practices/practices";
+import { SOLUCIONES } from "@soluciones";
 import { allBlocksWorkspace } from "./allBlocks";
 
 const norm = (n: string) => n.split("\\").join("/");
@@ -50,12 +50,13 @@ describe("exportación a MakeCode", () => {
     });
   }
 
-  it("las soluciones sin visión de las prácticas compilan", () => {
-    for (const p of PRACTICES) {
-      if (!p.solution) continue;
-      const res = exportMakeCode(compileWorkspace(p.solution()));
+  // Solo en el equipo del docente, donde están las soluciones (docente/soluciones.ts).
+  it.skipIf(!Object.keys(SOLUCIONES).length)("las soluciones sin visión de las prácticas compilan", () => {
+    for (const [n, s] of Object.entries(SOLUCIONES)) {
+      if (!s?.solution) continue;
+      const res = exportMakeCode(compileWorkspace(s.solution()));
       if (!res.compatible) continue;
-      expect(typecheck(res.code), `práctica ${p.n}`).toEqual([]);
+      expect(typecheck(res.code), `práctica ${n}`).toEqual([]);
     }
   });
 

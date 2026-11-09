@@ -10,7 +10,7 @@ import { uses, type Program } from "../program/ast";
 import type { Category } from "../program/blocks";
 import type { WorkspaceJson } from "../program/compile";
 import * as B from "../program/dsl";
-import { followLine, missionProgram, parkingProgram, EXAMPLES } from "../program/examples";
+import { followLine, parkingProgram, EXAMPLES } from "../program/examples";
 import { basicScenario, challengeScenario, cityScenario } from "../scenarios/defaults";
 import { Hold, inZone, itemList, lightState, programDriving, SpeedMeter, stopped, watchCollisions, type Checker } from "./checks";
 
@@ -27,8 +27,7 @@ export interface Practice {
   hints: string[];
   toolbox?: Category[];
   starter?: () => WorkspaceJson;
-  solution?: () => WorkspaceJson;
-  solutionText?: string;
+  // La solución de cada práctica NO está aquí: solo en la versión del docente (ver soluciones.ts).
   /** Muestra el control de cada motor aunque no esté el modo avanzado. */
   motorControls?: boolean;
   /** Práctica que hay que completar para abrir esta (por omisión, la anterior). */
@@ -138,7 +137,6 @@ export const PRACTICES: Practice[] = [
     },
     challenge: "Responde las seis preguntas tocando el componente correcto en la figura o en la lista.",
     hints: ["Los sensores de línea están debajo, en la parte delantera.", "El ultrasonido parece dos «ojos» plateados.", "La matriz LED está en la micro:bit: 25 puntos de luz."],
-    solutionText: "Línea → sensores infrarrojos inferiores. Distancia → ultrasonido. Señales → cámara y módulo K210. Decidir → micro:bit. Moverse → motores izquierdo y derecho. Iconos → matriz LED.",
     checker: () => {
       const L = itemList([
         ["linea", "Qué lee la línea negra"],
@@ -165,7 +163,6 @@ export const PRACTICES: Practice[] = [
     },
     challenge: "Usa las flechas o los botones. Prueba a combinar «Avanzar» con «Izquierda» para hacer curvas.",
     hints: ["Al soltar el botón, el robot se detiene.", "Baja la velocidad para maniobrar con precisión.", "Arriba + izquierda hace una curva: una rueda va más rápida que la otra."],
-    solutionText: "Avanza por la recta inferior, gira a la izquierda en la esquina y sube hasta la zona META de arriba a la derecha. Usa velocidades bajas cerca de la meta.",
     checker: () => {
       const L = itemList([
         ["manual", "Conduces en modo manual"],
@@ -205,7 +202,6 @@ export const PRACTICES: Practice[] = [
     challenge: "En «Cada motor por separado», escribe dos velocidades positivas distintas y mantén pulsado «aplicar» hasta girar un cuarto de vuelta.",
     hints: ["Las dos velocidades deben ser mayores que 0.", "Para curvar a la izquierda, la rueda derecha debe ir más rápida.", "Cuanto más se parecen las velocidades, más amplia es la curva."],
     motorControls: true,
-    solutionText: "Motor izquierdo 100 y derecho 200, mantener pulsado unos 2 segundos. También funciona con el bloque «motores izquierdo 100 derecho 200».",
     checker: () => {
       const L = itemList([
         ["dos", "Las dos ruedas avanzan a la vez"],
@@ -242,7 +238,6 @@ export const PRACTICES: Practice[] = [
     },
     challenge: "Mueve el robot despacio sobre la línea y mira los dos recuadros de la esquina: 1 = negro, 0 = blanco.",
     hints: ["Activa «Sensores» para ver los puntos de lectura bajo el robot.", "Gira despacio sobre la línea: un sensor sale antes que el otro.", "Aléjate de la línea para ver 0 y 0."],
-    solutionText: "Sobre la línea: 1-1. Gira un poco a la derecha: 1-0 (solo el izquierdo sobre negro). Gira a la izquierda: 0-1. Sal de la línea: 0-0.",
     checker: () => {
       const L = itemList([
         ["11", "Izquierdo 1 · derecho 1 (los dos sobre negro)"],
@@ -275,7 +270,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Con PWM 150 el robot recorre unos 23 cm por segundo.", "La META está a unos 65 cm de la salida.", "Prueba con valores entre 2500 y 3000 ms."],
     toolbox: ["inicio", "motores", "luces"],
     starter: starters.avance,
-    solution: () => B.workspace([B.onStart([B.motors(150, 150), B.wait(2750), B.stop(), B.icon("Yes")])]),
     checker: () => {
       const L = itemList([
         ["mueve", "Tu programa mueve el robot"],
@@ -313,7 +307,6 @@ export const PRACTICES: Practice[] = [
     hints: ["En «Condiciones y lógica» hay un bloque «si» con cuatro casos ya armados (también puedes añadir «si no, si» con el engranaje).","Para girar a la izquierda: motor izquierdo lento (20) y derecho rápido (150).", "Revisa el registro: ¿qué decisión tomó justo antes de perder la línea?"],
     toolbox: ["inicio", "logica", "motores", "sensores"],
     starter: starters.seguidor,
-    solution: ex("seguidor-basico"),
     checker: () => {
       const L = itemList([
         ["sensores", "El programa usa los sensores de línea"],
@@ -362,7 +355,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Girar sobre sí mismo hace que los sensores barran un círculo alrededor del robot.", "Recuerda en una variable de qué lado viste la línea por última vez.", "Mira el ejemplo resuelto «Recuperar la línea perdida»."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores"],
     starter: starters.seguidorCompleto,
-    solution: ex("recuperar-linea"),
     checker: () => {
       const L = itemList([
         ["perdido", "Empezó sin ver la línea"],
@@ -405,7 +397,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Usa «obstáculo a menos de 15 cm» en el primer «si».", "Si la condición del obstáculo va después del seguimiento, nunca se llega a comprobar.", "Anota la decisión para ver la distancia: «unir … distancia …»."],
     toolbox: ["inicio", "logica", "motores", "sensores", "luces"],
     starter: starters.seguidorCompleto,
-    solution: ex("obstaculo"),
     checker: () => {
       const L = itemList([
         ["sonar", "El programa usa el ultrasonido"],
@@ -448,7 +439,6 @@ export const PRACTICES: Practice[] = [
     },
     challenge: "Logra que se reconozcan tres señales distintas y encuentra una que no se reconozca. Lee el motivo en la vista de la cámara.",
     hints: ["Activa la ayuda «Cámara» para ver su campo de visión.", "Una señal vista de lado no se reconoce.", "Busca la caja alta cerca de los estacionamientos."],
-    solutionText: "Recorre la recta superior hacia el este (límite 30, semáforo, fin del límite). Luego mira una señal de lado o desde lejos: el recuadro gris indica «de lado», «demasiado lejos» o «tapada».",
     checker: () => {
       const L = itemList([
         ["tres", "La visión reconoció 3 señales distintas"],
@@ -483,7 +473,6 @@ export const PRACTICES: Practice[] = [
     hints: ["La condición del semáforo va primero, el seguidor en «si no».", "Anota la decisión: «Me detengo porque detecté rojo».", "Usa «o» para detenerte también con amarillo (ampliación educativa)."],
     toolbox: ["inicio", "logica", "motores", "sensores", "vision", "luces"],
     starter: starters.semaforo,
-    solution: ex("semaforo"),
     checker: () => {
       const L = itemList([
         ["rojo", "Se detuvo con el semáforo en rojo"],
@@ -529,7 +518,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Usa «asignar velocidad a 70» dentro de «si la cámara ve límite 30».", "La variable recuerda la señal aunque ya no se vea.", "Con «fin del límite», vuelve a 150."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores", "vision"],
     starter: starters.zona,
-    solution: ex("zona-30"),
     checker: () => {
       const L = itemList([
         ["antes", "Velocidad normal antes de la zona"],
@@ -572,7 +560,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Copia el «si la cámara ve izquierda» y cambia el texto a derecha.", "Para girar a la derecha: motor izquierdo 110, derecho −90.", "Tras girar, el programa vuelve a «Seguir línea» y olvida la flecha."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores", "vision", "estados"],
     starter: starters.giro,
-    solution: ex("elegir-giro"),
     checker: () => {
       const L = itemList([
         ["vio", "La cámara vio la flecha"],
@@ -617,7 +604,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Cambia todas las «la cámara ve estacionamiento 2» por «estacionamiento 1».", "Las dos plazas están a la misma distancia de su señal: los tiempos sirven.", "La variable «estacionado» evita que repita la maniobra."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores", "vision", "estados"],
     starter: () => parkingProgram("p2"),
-    solution: () => parkingProgram("p1"),
     checker: () => {
       const L = itemList([
         ["dentro", "Entró en la plaza 1"],
@@ -658,7 +644,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Arrastra el bloque de la condición de obstáculo al primer lugar.", "La condición «sensor ve negro» es casi siempre verdadera: por eso tapa a las demás.", "Mira el ejemplo resuelto «Prioridades entre conductas»."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores", "vision", "luces"],
     starter: starters.prioridadesMal,
-    solution: ex("prioridades"),
     checker: () => {
       const L = itemList([
         ["rojo", "No cruzó con el semáforo en rojo"],
@@ -699,7 +684,6 @@ export const PRACTICES: Practice[] = [
     challenge: "Construye la misión paso a paso. Comprueba cada hito antes de pasar al siguiente.",
     hints: ["Empieza por el semáforo y la flecha: copia ideas de las prácticas 10 y 12.", "Usa la variable «estacionado» para no repetir la maniobra.", "El ejemplo resuelto «Misión completa» muestra una solución posible."],
     starter: starters.mision,
-    solution: missionProgram,
     checker: () => {
       const L = itemList([
         ["semaforo", "Respetó el semáforo"],
@@ -748,7 +732,6 @@ export const PRACTICES: Practice[] = [
     },
     challenge: "Usa los botones de la tarjeta «Percibir → decidir → actuar»: línea centrada, a la izquierda, a la derecha y sin línea. Espera a que se iluminen los tres pasos.",
     hints: ["Los botones están debajo de la ficha del componente, en «Explorar».", "Cada vez que cambia la lectura, el ciclo empieza otra vez: percibir, decidir, actuar.", "«Sin línea» deja los dos sensores sobre blanco."],
-    solutionText: "Línea centrada → 1 · 1, sigo recto. Línea a la izquierda → 1 · 0, giro a la izquierda. Línea a la derecha → 0 · 1, giro a la derecha. Sin línea → 0 · 0, me detengo.",
     checker: () => {
       const L = itemList([
         ["11", "Los dos sensores sobre la línea: sigue recto"],
@@ -778,7 +761,6 @@ export const PRACTICES: Practice[] = [
     },
     challenge: "Pasa la 1.ª caja por arriba (del lado de la recta superior), la 2.ª por abajo y la 3.ª otra vez por arriba. Termina dentro de la META.",
     hints: ["La vista «Superior» ayuda a ver de qué lado pasas cada caja.", "Baja la velocidad a unos 100.", "Si tocas una caja, pulsa «Reiniciar escenario» y vuelve a empezar."],
-    solutionText: "Avanza en diagonal hacia arriba antes de la 1.ª caja, baja entre la 1.ª y la 2.ª, vuelve a subir entre la 2.ª y la 3.ª y termina en la META de la derecha.",
     checker: () => {
       const L = itemList([
         ["c1", "La 1.ª caja, por arriba"],
@@ -830,13 +812,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Los botones A y B aparecen junto a «Ejecutar» cuando el programa los usa.", "En «al iniciar», pon «andar» a 0: así el robot espera.", "Con B, pon «andar» a 0 y detén los motores."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores"],
     starter: () => B.workspace([B.forever([followLine(150)])]),
-    solution: () =>
-      B.workspace([
-        B.onStart([B.set("andar", 0), B.icon("Asleep")]),
-        B.onButton("A", [B.set("andar", 1), B.decide("Botón A: arranco")]),
-        B.onButton("B", [B.set("andar", 0), B.stop(), B.decide("Botón B: me detengo")], 320, 140),
-        B.forever([B.ifElse([[B.cmp(B.get("andar"), "EQ", 1), [followLine(150, false)]]], [B.stop()])]),
-      ]),
     checker: () => {
       const L = itemList([
         ["espera", "Antes de pulsar A, el robot no se mueve"],
@@ -878,12 +853,6 @@ export const PRACTICES: Practice[] = [
     hints: ["«Luces RGB» está en «Luces y acciones».", "El verde va en el «si no», junto al seguidor de línea.", "El rojo va junto a «detener motores»."],
     toolbox: ["inicio", "logica", "motores", "sensores", "luces"],
     starter: ex("obstaculo"),
-    solution: () =>
-      B.workspace([
-        B.forever([
-          B.ifElse([[B.obstacle(15), [B.stop(), B.lights("Red"), B.decide("Caja delante: me detengo y enciendo rojo")]]], [B.lights("Green"), followLine(150, false)]),
-        ]),
-      ]),
     checker: () => {
       const L = itemList([
         ["verde", "Faros verdes mientras avanza (1 s)"],
@@ -922,15 +891,6 @@ export const PRACTICES: Practice[] = [
     hints: ["«convertir … de 8 – 60 a 0 – 180» está en «Matemáticas».", "«restringir … entre 0 y 180» evita velocidades negativas o demasiado altas.", "Si la distancia es 0 (no hay eco), no hay nada delante: usa la velocidad máxima."],
     toolbox: ["inicio", "logica", "matematicas", "variables", "motores", "sensores"],
     starter: () => B.workspace([B.forever([B.ifElse([[B.obstacle(15), [B.stop()]]], [B.motors(150, 150)])])]),
-    solution: () =>
-      B.workspace([
-        B.forever([
-          B.set("v", B.constrain(B.mapRange(B.distance(), 8, 60, 0, 180), 0, 180)),
-          B.when(B.cmp(B.distance(), "EQ", 0), [B.set("v", 180)]),
-          B.motors(B.get("v"), B.get("v")),
-          B.decide(B.join("Velocidad según la distancia: ", B.get("v"))),
-        ]),
-      ]),
     checker: () => {
       const L = itemList([
         ["rapido", "Lejos de la caja va rápido"],
@@ -974,11 +934,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Pon «pitado» a 0 en «al iniciar».", "Pita solo si la cámara ve claxon Y «pitado» es 0; después pon «pitado» a 1.", "El ejemplo «Misión completa» lo hace así."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores", "vision", "luces"],
     starter: () => B.workspace([B.forever([B.when(B.signIs("claxon"), [B.horn(), B.decide("Veo la señal de claxon: pito")]), followLine(140, false)])]),
-    solution: () =>
-      B.workspace([
-        B.onStart([B.set("pitado", 0)]),
-        B.forever([B.when(B.and(B.signIs("claxon"), B.cmp(B.get("pitado"), "EQ", 0)), [B.horn(), B.set("pitado", 1), B.decide("Veo la señal de claxon: pito una vez")]), followLine(140, false)]),
-      ]),
     checker: () => {
       const L = itemList([
         ["vio", "La cámara vio la señal de claxon"],
@@ -1021,20 +976,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Al ver ALTO (y «visto» = 0): detener, «visto» = 1 y cambiar a estado Esperar.", "En estado Esperar, cuando «tiempo en este estado» > 2000, vuelve a Seguir línea.", "Pon «visto» a 0 solo cuando la cámara deje de ver ALTO."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores", "vision", "estados"],
     starter: () => B.workspace([B.forever([B.ifElse([[B.signIs("alto"), [B.stop(), B.decide("ALTO: me detengo")]]], [followLine(140, false)])])]),
-    solution: () =>
-      B.workspace([
-        B.onStart([B.set("visto", 0), B.setState("SEGUIR_LINEA")]),
-        B.forever([
-          B.when(B.and(B.not(B.signIs("alto")), B.stateIs("SEGUIR_LINEA")), [B.set("visto", 0)]),
-          B.ifElse(
-            [
-              [B.stateIs("ESPERAR"), [B.stop(), B.when(B.cmp(B.stateTime(), "GT", 2000), [B.setState("SEGUIR_LINEA"), B.decide("Ya esperé 2 s: continúo")])]],
-              [B.and(B.signIs("alto"), B.cmp(B.get("visto"), "EQ", 0)), [B.stop(), B.set("visto", 1), B.setState("ESPERAR"), B.decide("Veo ALTO: me detengo 2 s")]],
-            ],
-            [followLine(140, false)],
-          ),
-        ]),
-      ]),
     checker: () => {
       const L = itemList([
         ["para", "Se detuvo antes de la señal"],
@@ -1093,15 +1034,6 @@ export const PRACTICES: Practice[] = [
         B.onStart([B.set("pasadas", 0)]),
         B.forever([B.when(B.signIs("claxon"), [B.change("pasadas", 1)]), B.ifElse([[B.cmp(B.get("pasadas"), "GTE", 3), [B.stop(), B.decide("Llegué a 3: me detengo")]]], [followLine(150, false)])]),
       ]),
-    solution: () =>
-      B.workspace([
-        B.onStart([B.set("pasadas", 0), B.set("vista", 0)]),
-        B.forever([
-          B.when(B.and(B.signIs("claxon"), B.cmp(B.get("vista"), "EQ", 0)), [B.change("pasadas", 1), B.set("vista", 1), B.decide(B.join("Pasada número ", B.get("pasadas"))), B.showNumber(B.get("pasadas"))]),
-          B.when(B.not(B.signIs("claxon")), [B.set("vista", 0)]),
-          B.ifElse([[B.cmp(B.get("pasadas"), "GTE", 3), [B.stop(), B.decide("Tercera pasada: me detengo")]]], [followLine(150, false)]),
-        ]),
-      ]),
     checker: () => {
       const L = itemList([
         ["p1", "1.ª pasada junto a la señal"],
@@ -1146,12 +1078,6 @@ export const PRACTICES: Practice[] = [
     hints: ["En «Funciones», crea una función y cámbiale el nombre.", "Arrastra el bloque «si» del seguidor dentro de la función «seguirLinea».", "En «alto» pon «detener motores» y «mostrar icono».", "Las llamadas aparecen en «Funciones» cuando ya existe la función."],
     toolbox: ["inicio", "logica", "funciones", "motores", "sensores", "luces"],
     starter: ex("obstaculo"),
-    solution: () =>
-      B.workspace([
-        B.forever([B.ifElse([[B.obstacle(15), [B.call("alto")]]], [B.call("seguirLinea")])]),
-        B.funcDef("seguirLinea", [followLine(150, false)], 360, 40),
-        B.funcDef("alto", [B.stop(), B.decide("Caja delante: me detengo"), B.icon("No")], 360, 330),
-      ]),
     checker: () => {
       const L = itemList([
         ["funciones", "El programa tiene dos funciones y las llama"],
@@ -1198,14 +1124,6 @@ export const PRACTICES: Practice[] = [
     hints: ["Cambia la variable «velocidad» según lo que ve la cámara, antes del seguidor.", "Rojo y amarillo ya no van juntos con «o».", "Cuando el semáforo sale de la vista, vuelve a 150."],
     toolbox: ["inicio", "logica", "variables", "motores", "sensores", "vision", "luces"],
     starter: ex("semaforo"),
-    solution: () =>
-      B.workspace([
-        B.onStart([B.set("velocidad", 150)]),
-        B.forever([
-          B.ifElse([[B.signIs("semaforo_amarillo"), [B.set("velocidad", 70), B.decide("Amarillo: voy más despacio")]]], [B.set("velocidad", 150)]),
-          B.ifElse([[B.signIs("semaforo_rojo"), [B.stop(), B.decide("Rojo: me detengo")]]], [followLine(B.get("velocidad"), false)]),
-        ]),
-      ]),
     checker: () => {
       const L = itemList([
         ["frena", "Con amarillo va más despacio"],

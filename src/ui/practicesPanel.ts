@@ -10,6 +10,7 @@ import type { Sim } from "../core/sim";
 import { done, type Checker } from "../practices/checks";
 import { emptyRecord, gradeOf, detailOf, type PracticeRecord } from "../practices/perfil";
 import { PRACTICES, practiceScenario, type Practice } from "../practices/practices";
+import { SOLUCIONES } from "@soluciones";
 import { ALL_CATEGORIES } from "../program/blocks";
 import type { App } from "./app";
 import { btn, h, icon, modal, store, toast } from "./dom";
@@ -83,7 +84,7 @@ export class PracticesUI {
         h("span", {}, h("span", { class: "t" }, p.title), h("br"), h("span", { class: "s" }, p.goal)),
         h("span", { class: `badge ${st === "done" ? "done" : st === "lock" ? "lock" : "space"}` }, st === "done" ? "Completada" : st === "lock" ? "Bloqueada" : SPACE_NAME[p.space]),
       );
-      if (st === "lock") item.title = `Completa la práctica ${p.after ?? p.n - 1} o activa el modo docente en Ajustes.`;
+      if (st === "lock") item.title = `Completa la práctica ${p.after ?? p.n - 1} para abrirla.`;
       item.addEventListener("click", () => this.open(p));
       const reset = btn("", "reset", () => this.resetPractice(p), "small icon-only ghost prac-reset");
       reset.title = `Reiniciar la práctica ${p.n}`;
@@ -288,8 +289,8 @@ export class PracticesUI {
     // Comprobación
     body.append(h("div", { class: "blk check-blk" }, h("div", { class: "lbl" }, icon("check"), "Comprobación (lo que hace el robot)"), this.checksEl));
 
-    // Solución
-    body.append(h("div", { class: "row" }, btn("Ver solución", "book", () => this.showSolution(), "small ghost")));
+    // Solución: solo en la versión del docente, con el modo docente encendido.
+    if (this.app.teacher && SOLUCIONES[p.n]) body.append(h("div", { class: "row" }, btn("Ver solución", "book", () => this.showSolution(), "small ghost")));
 
     // Viajar entre prácticas: se activa al completar la práctica en turno.
     this.navPrev = btn("Anterior", "left", () => this.goTo(p.n - 1), "small");
@@ -301,19 +302,14 @@ export class PracticesUI {
 
   private async showSolution() {
     const p = this.active!;
-    const ok = this.app.teacher || (await modal({ title: "¿Ver la solución?", narrow: true, body: ["Intenta primero con las pistas. La solución se abre como ejemplo y no borra tu programa."], actions: [{ label: "Seguir intentando", value: "no" }, { label: "Ver solución", value: "si", cls: "primary" }] })) === "si";
-    if (!ok) return;
-    // Ver la solución antes de completarla baja la calificación (no en modo docente).
-    if (!this.completedNow && !this.app.teacher && !this.rec.solucion) {
-      this.rec.solucion = true;
-      this.saveRec();
-    }
-    if (p.solution) {
+    const sol = SOLUCIONES[p.n];
+    if (!this.app.teacher || !sol) return;
+    if (sol.solution) {
       this.follows = true;
       this.app.setTab("programar");
-      await this.app.program.openExample({ id: `__solucion-${p.n}`, title: `Solución de la práctica ${p.n}`, summary: "Ejecútala para comparar con tu programa. «Volver a mi programa» recupera tu trabajo.", scenario: "practica", build: p.solution });
-    } else if (p.solutionText) {
-      await modal({ title: `Solución · Práctica ${p.n}`, narrow: true, body: [h("p", {}, p.solutionText)] });
+      await this.app.program.openExample({ id: `__solucion-${p.n}`, title: `Solución de la práctica ${p.n}`, summary: "Ejecútala para comparar con tu programa. «Volver a mi programa» recupera tu trabajo.", scenario: "practica", build: sol.solution });
+    } else if (sol.solutionText) {
+      await modal({ title: `Solución · Práctica ${p.n}`, narrow: true, body: [h("p", {}, sol.solutionText)] });
     }
   }
 

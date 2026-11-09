@@ -4,8 +4,26 @@
     {
       "name": "simulador-tiny-pro",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["vite", "--port", "5180", "--strictPort"],
+      "runtimeArgs": [
+        "vite",
+        "--port",
+        "5180",
+        "--strictPort"
+      ],
       "port": 5180
+    },
+    {
+      "name": "simulador-docente",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vite",
+        "--mode",
+        "docente",
+        "--port",
+        "5181",
+        "--strictPort"
+      ],
+      "port": 5181
     }
   ]
 }

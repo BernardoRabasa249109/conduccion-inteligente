@@ -53,12 +53,18 @@ Requiere [Node.js](https://nodejs.org/) 18 o superior.
 ```bat
 npm install
 npm run dev        :: servidor de desarrollo en http://localhost:5173
-npm test           :: 130 verificaciones automáticas
-npm run build      :: genera dist\index.html (un único archivo)
+npm test           :: 132 verificaciones automáticas (112 sin las soluciones del docente)
+npm run build      :: versión pública: dist\index.html (sin modo docente ni soluciones)
+npm run build:docente :: versión del docente: docente\simulador\index.html (solo en el equipo del docente)
+npm run docente    :: servidor de desarrollo de la versión del docente (puerto 5181)
 npm run examples   :: regenera los archivos de la carpeta ejemplos\
 ```
 
 `Desarrollo (instalar y ejecutar).bat` hace `npm install` y `npm run dev` con doble clic.
+
+### Versión del docente (solo local)
+
+La versión pública no tiene modo docente ni las soluciones de las prácticas. Las soluciones están en `docente/soluciones.ts`, una carpeta que está en `.gitignore` y solo existe en el equipo del docente; `npm run build:docente` falla a propósito si no la encuentra. Detalles en `docs/GUIA_DOCENTE.md`.
 
 ### Cambiar el modelo 3D de «Explorar»
 
