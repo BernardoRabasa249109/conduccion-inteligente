@@ -1,5 +1,8 @@
 /** Objetos 3D del tapete: señales, semáforos, obstáculos. */
 import * as THREE from "three";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import lightUrl from "../../modelo3D/Semaforo_simulador.glb?url";
 import type { LampColor, LightObject, LightState, ObstacleObject, SignObject } from "../core/scenario";
 import { PROPS } from "../core/world";
 import { signFace } from "./signFaces";
@@ -66,49 +69,122 @@ export function buildSign(o: SignObject): THREE.Group {
   return g;
 }
 
+const LAMPS: LampColor[] = ["rojo", "amarillo", "verde"];
+/** Material de cada lente en el modelo (Semaforo_3D) y su color encendido (el mismo del visor del modelo). */
+const LENS_MAT: Record<LampColor, string> = { rojo: "Lente_roja_apagada", amarillo: "Lente_ambar_apagada", verde: "Lente_verde_apagada" };
+const LIT: Record<LampColor, number> = { rojo: 0xff1420, amarillo: 0xffaa05, verde: 0x00ef55 };
+
+interface LightTemplate {
+  model: THREE.Object3D;
+  /** Centro y radio de cada lente, ya en las medidas del simulador. */
+  lenses: Record<LampColor, { x: number; y: number; z: number; r: number }>;
+}
+let template: Promise<LightTemplate> | null = null;
+
+/**
+ * Modelo 3D del semáforo (Semaforo_3D, copia optimizada con `npm run semaforo`).
+ * Se carga una vez; todos los semáforos comparten sus formas y sus materiales
+ * (salvo las lentes, que cada uno enciende por su cuenta).
+ */
+function lightTemplate(): Promise<LightTemplate> {
+  template ??= new GLTFLoader()
+    .setMeshoptDecoder(MeshoptDecoder)
+    .loadAsync(lightUrl)
+    .then((gltf) => {
+      const model = gltf.scene;
+      // El modelo tiene Y vertical y el frente hacia +Z (en metros); en el simulador
+      // las luces miran hacia +X local. Mide lo mismo que el semáforo de siempre,
+      // con la carcasa a la altura que usa la visión simulada (PROPS.lightCenter).
+      model.rotation.y = Math.PI / 2;
+      const box = new THREE.Box3().setFromObject(model);
+      model.scale.setScalar((PROPS.lightCenter + PROPS.lightBoxH / 2) / (box.max.y - box.min.y));
+      model.updateMatrixWorld(true);
+      model.traverse((o) => {
+        const m = o as THREE.Mesh;
+        if (!m.isMesh) return;
+        m.geometry.userData.shared = true;
+        const mat = m.material as THREE.MeshStandardMaterial;
+        if (!Object.values(LENS_MAT).includes(mat.name)) mat.userData.shared = true;
+        // La escena del tapete no tiene reflejos de entorno: con el acabado metálico
+        // del modelo, el poste de aluminio y la carcasa se verían negros.
+        mat.metalness = Math.min(mat.metalness, 0.15);
+      });
+      // La base, centrada en el punto del semáforo y apoyada en el tapete.
+      const all = new THREE.Box3().setFromObject(model);
+      const center = new THREE.Box3().setFromObject(findByMaterial(model, "Base_grafito") ?? model).getCenter(new THREE.Vector3());
+      model.position.set(-center.x, -all.min.y, -center.z);
+      model.updateMatrixWorld(true);
+      const lenses = {} as LightTemplate["lenses"];
+      for (const c of LAMPS) {
+        const b = new THREE.Box3().setFromObject(findByMaterial(model, LENS_MAT[c])!);
+        const mid = b.getCenter(new THREE.Vector3());
+        lenses[c] = { x: b.max.x, y: mid.y, z: mid.z, r: (b.max.y - b.min.y) / 2 };
+      }
+      const holder = new THREE.Group();
+      holder.add(model);
+      return { model: holder, lenses };
+    });
+  return template;
+}
+
+function findByMaterial(root: THREE.Object3D, name: string): THREE.Object3D | undefined {
+  let found: THREE.Object3D | undefined;
+  root.traverse((o) => {
+    if (!found && (o as THREE.Mesh).isMesh && ((o as THREE.Mesh).material as THREE.Material).name === name) found = o;
+  });
+  return found;
+}
+
 export class LightModel {
   readonly group = new THREE.Group();
-  private lamps: Record<LampColor, THREE.MeshStandardMaterial>;
-  private glow: Record<LampColor, THREE.Mesh>;
+  private lamps = {} as Record<LampColor, THREE.MeshStandardMaterial>;
+  private glow = {} as Record<LampColor, THREE.Mesh>;
+  private state: LightState = "apagado";
   constructor(o: LightObject) {
     const g = this.group;
     g.add(softShadow(PROPS.lightBaseR));
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(PROPS.lightBaseR, PROPS.lightBaseR * 1.05, 1.2, 28), baseMat);
-    base.position.y = 0.6;
-    const pole = new THREE.Mesh(new THREE.CylinderGeometry(PROPS.lightPoleR, PROPS.lightPoleR, PROPS.lightCenter, 12), poleMat);
-    pole.position.y = PROPS.lightCenter / 2;
-    const box = new THREE.Mesh(new THREE.BoxGeometry(2.4, PROPS.lightBoxH, PROPS.lightBoxW), std(0x1c1c20, { roughness: 0.5 }));
-    box.position.y = PROPS.lightCenter;
-    g.add(base, pole, box);
-    const colors: Record<LampColor, number> = { rojo: 0xff2a2a, amarillo: 0xffc21a, verde: 0x22e06a };
-    this.lamps = {} as never;
-    this.glow = {} as never;
-    (["rojo", "amarillo", "verde"] as LampColor[]).forEach((st, i) => {
-      const m = new THREE.MeshStandardMaterial({ color: 0x222222, emissive: colors[st], emissiveIntensity: 0.05, roughness: 0.3 });
-      this.lamps[st] = m;
-      const lamp = new THREE.Mesh(new THREE.SphereGeometry(1.0, 18, 12, 0, Math.PI), m);
-      lamp.rotation.y = Math.PI / 2;
-      lamp.position.set(1.2, PROPS.lightCenter + 2.8 - i * 2.8, 0);
-      const visor = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.25, 0.9, 16, 1, true, -Math.PI / 2, Math.PI), std(0x18181b, { side: THREE.DoubleSide }));
-      visor.rotation.z = Math.PI / 2;
-      visor.position.set(1.55, PROPS.lightCenter + 2.8 - i * 2.8, 0);
-      const glow = new THREE.Mesh(new THREE.CircleGeometry(1.9, 20), new THREE.MeshBasicMaterial({ color: colors[st], transparent: true, opacity: 0, depthWrite: false }));
-      glow.rotation.y = Math.PI / 2;
-      glow.position.set(1.3, PROPS.lightCenter + 2.8 - i * 2.8, 0);
-      this.glow[st] = glow;
-      g.add(lamp, visor, glow);
-    });
     g.position.set(o.x, 0, o.y);
     g.rotation.y = -o.facing;
     g.userData.id = o.id;
+    void lightTemplate().then((t) => this.attach(t));
   }
+
+  private attach(t: LightTemplate) {
+    const model = t.model.clone();
+    // Cada semáforo enciende sus propias lentes: esos materiales no se comparten.
+    model.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (!m.isMesh) return;
+      const c = LAMPS.find((k) => (m.material as THREE.Material).name === LENS_MAT[k]);
+      if (!c) return;
+      const mat = (m.material as THREE.MeshStandardMaterial).clone();
+      mat.emissive.setHex(LIT[c]);
+      m.material = this.lamps[c] = mat;
+    });
+    // Halo delante de la lente encendida: se distingue el color también desde lejos
+    // y en la vista pequeña de la cámara K210.
+    for (const c of LAMPS) {
+      const l = t.lenses[c];
+      const glow = new THREE.Mesh(
+        new THREE.CircleGeometry(l.r * 1.35, 24),
+        new THREE.MeshBasicMaterial({ color: LIT[c], transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending }),
+      );
+      glow.rotation.y = Math.PI / 2;
+      glow.position.set(l.x + 0.08, l.y, l.z);
+      this.glow[c] = glow;
+      model.add(glow);
+    }
+    this.group.add(model);
+    this.set(this.state);
+  }
+
   /** Enciende la luz del estado; «apagado» deja las tres apagadas. */
   set(state: LightState) {
-    for (const st of ["rojo", "amarillo", "verde"] as LampColor[]) {
-      const on = st === state;
-      this.lamps[st].color.setHex(on ? 0xffffff : 0x222222);
-      this.lamps[st].emissiveIntensity = on ? 1.6 : 0.05;
-      (this.glow[st].material as THREE.MeshBasicMaterial).opacity = on ? 0.35 : 0;
+    this.state = state;
+    for (const c of LAMPS) {
+      const on = c === state;
+      if (this.lamps[c]) this.lamps[c].emissiveIntensity = on ? 2.2 : 0;
+      if (this.glow[c]) (this.glow[c].material as THREE.MeshBasicMaterial).opacity = on ? 0.45 : 0;
     }
   }
 }

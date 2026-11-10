@@ -103,6 +103,8 @@ export class App {
     const pauseBtn = btn("Pausa", "pause", () => this.sim.setPaused(!this.sim.paused), "small");
     pauseBtn.id = "pause-global";
     pauseBtn.title = "Pausar o continuar la simulación (tecla P)";
+    // En portátiles solo se ve el ícono: el nombre accesible no depende de la etiqueta.
+    pauseBtn.setAttribute("aria-label", "Pausar o continuar la simulación");
     const emergency = btn("PARADA", "stop", () => this.emergency(), "emergency");
     emergency.title = "Parada de emergencia (tecla Esc): motores a 0 y programa detenido";
     emergency.setAttribute("aria-label", "Parada de emergencia");

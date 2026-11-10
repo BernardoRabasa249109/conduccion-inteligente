@@ -253,7 +253,8 @@ export class Scene3D {
     this.propGroup.traverse((o) => {
       const m = o as THREE.Mesh;
       if (!m.geometry) return;
-      m.geometry.dispose();
+      // Las formas del modelo del semáforo las comparten todos los semáforos.
+      if (!m.geometry.userData.shared) m.geometry.dispose();
       for (const mat of ([] as THREE.Material[]).concat(m.material ?? [])) {
         const map = (mat as THREE.MeshStandardMaterial).map;
         if (map && !map.userData.shared) map.dispose();

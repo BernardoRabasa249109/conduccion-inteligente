@@ -57,7 +57,7 @@ npm test           :: 132 verificaciones automáticas (112 sin las soluciones de
 npm run build      :: versión pública: dist\index.html (sin modo docente ni soluciones)
 npm run build:docente :: versión del docente: docente\simulador\index.html (solo en el equipo del docente)
 npm run docente    :: servidor de desarrollo de la versión del docente (puerto 5181)
-npm run examples   :: regenera los archivos de la carpeta ejemplos\
+npm run examples   :: regenera los archivos de la carpeta ejemplos\nnpm run semaforo   :: regenera modelo3DSemaforo_simulador.glb a partir de Semaforo_3Dmodelossemaforo.glb
 ```
 
 `Desarrollo (instalar y ejecutar).bat` hace `npm install` y `npm run dev` con doble clic.
@@ -65,6 +65,10 @@ npm run examples   :: regenera los archivos de la carpeta ejemplos\
 ### Versión del docente (solo local)
 
 La versión pública no tiene modo docente ni las soluciones de las prácticas. Las soluciones están en `docente/soluciones.ts`, una carpeta que está en `.gitignore` y solo existe en el equipo del docente; `npm run build:docente` falla a propósito si no la encuentra. Detalles en `docs/GUIA_DOCENTE.md`.
+
+### Cambiar el semáforo 3D
+
+El semáforo de los escenarios es el modelo de `Semaforo_3D/modelos/semaforo.glb` (350 piezas, 63 mil triángulos, 2.5 MB). El simulador usa una copia optimizada, `modelo3D/Semaforo_simulador.glb` (7 piezas, unos 31 mil triángulos, 286 KB): piezas unidas por material, sin coordenadas de textura y comprimida con meshopt. Si cambias el modelo, ejecuta `npm run semaforo` y luego `npm run build`. Cada lente se enciende por el nombre de su material (`Lente_roja_apagada`, `Lente_ambar_apagada`, `Lente_verde_apagada`): consérvalos. La visión simulada usa las medidas de `PROPS` (`src/core/world.ts`); el modelo se escala a esa altura.
 
 ### Cambiar el modelo 3D de «Explorar»
 
@@ -85,7 +89,8 @@ El simulador reconoce cada pieza por el número con el que empieza su nombre: 10
 | `docs/APROXIMACIONES_Y_COMPATIBILIDAD.md` | Qué está comprobado, qué es simulado y qué es ampliación educativa. |
 | `src/` | Código fuente (TypeScript, Three.js, Blockly). |
 | `tests/` | Verificaciones automáticas (Vitest). |
-| `modelo3D/` | Modelo 3D del robot que se ve en «Explorar» (`Tinybit_Pro_conceptual.glb`), el script que lo genera y la imagen de referencia. |
+| `modelo3D/` | Modelo 3D del robot que se ve en «Explorar» (`Tinybit_Pro_conceptual.glb`), el script que lo genera, la imagen de referencia y la copia optimizada del semáforo (`Semaforo_simulador.glb`). |
+| `Semaforo_3D/` | Modelo original del semáforo (GLB, OBJ, STL, Blender) y su visor. |
 
 ## Arquitectura
 

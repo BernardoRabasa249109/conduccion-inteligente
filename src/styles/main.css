@@ -526,3 +526,39 @@ html, body { overflow-x: hidden; max-width: 100%; }
 
 /* Versión del docente (local): distintivo para no confundirla con la del alumnado. */
 .docente-badge { flex: none; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; color: #1a1205; background: #fbbf24; }
+
+/* ───────── Barra superior en portátiles (de 1280 a 1600 px: MacBook Air 13 y 15", portátiles de 14") ─────────
+   El título nunca queda debajo de las pestañas: primero se compacta la barra y, si aun así
+   falta espacio (por ejemplo, un nombre largo en «Perfil»), el título se recorta con «…». */
+.brand { flex: 0 1 auto; }
+.brand-text { min-width: 0; overflow: hidden; }
+.brand-text strong, .brand-text span { overflow: hidden; text-overflow: ellipsis; }
+.tabs, .top-actions { flex: none; }
+.profile-btn span { max-width: 10ch; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 1600px) {
+  .topbar { gap: 12px; padding: 10px 14px; }
+  .tabs { margin-left: 0; gap: 4px; }
+  .tab { padding: 9px 12px; gap: 7px; font-size: 15.5px; }
+  .tab svg { width: 20px; height: 20px; }
+  .top-actions { gap: 8px; }
+  #pause-global span { display: none; }
+  .mode-badge { padding: 7px 11px; font-size: 13px; }
+}
+@media (max-width: 1400px) {
+  .brand-text strong { font-size: 17px; }
+  .brand-text span { font-size: 11.5px; }
+  .tab { padding: 9px 10px; font-size: 15px; }
+}
+@media (max-width: 1340px) {
+  .brand-text strong { font-size: 16px; }
+  .tab { padding: 8px 9px; gap: 6px; font-size: 14.5px; }
+  .tab svg { width: 18px; height: 18px; }
+}
+/* Con las pestañas solo con ícono (de 981 a 1180 px, como un iPad horizontal) sí cabe el título. */
+@media (min-width: 981px) and (max-width: 1180px) {
+  .brand-text { display: flex; }
+}
+/* Justo por encima de 1280 px ya no caben las etiquetas de las pestañas junto al título completo. */
+@media (max-width: 1296px) {
+  .tab span { display: none; }
+}
