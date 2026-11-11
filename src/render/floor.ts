@@ -6,7 +6,7 @@
  */
 import { LINE } from "../core/config";
 import { matHeight, matWidth, type Scenario } from "../core/scenario";
-import { LineMap, markPrim, strokePrims, tilePrims } from "../core/track";
+import { isRoundabout, LineMap, markPrim, ROUNDABOUT, strokePrims, tilePrims } from "../core/track";
 
 export const FLOOR_PX = 8;
 
@@ -115,11 +115,29 @@ export function drawFloor(canvas: HTMLCanvasElement, s: Scenario, opts: { grid?:
     ctx.restore();
   }
 
+  // Glorietas: disco blanco bajo el anillo (como en el tapete de referencia).
+  const rounds = s.tiles.filter((t) => isRoundabout(t.type)).map((t) => [(t.c + 0.5) * s.tile * k, (t.r + 0.5) * s.tile * k] as const);
+  ctx.fillStyle = "#ffffff";
+  for (const [cx, cy] of rounds) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, (ROUNDABOUT.ring * s.tile + LINE.roadWidth / 2) * k, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
   // Carretera blanca y línea negra (mismas formas que leen los sensores).
   const prims = s.tiles.flatMap((t) => tilePrims(t, s.tile));
   strokePrims(ctx, prims, k, LINE.roadWidth, "#ffffff", "butt");
   // Tapas redondeadas en los extremos sueltos de la carretera.
   strokePrims(ctx, prims, k, LINE.roadWidth, "#ffffff", "round");
+  // Dona morada al centro de cada glorieta. Es decoración: no es línea negra
+  // y los sensores del simulador no la leen (en un tapete impreso depende de la tinta).
+  ctx.strokeStyle = "#6e0078";
+  ctx.lineWidth = (ROUNDABOUT.donutOuter - ROUNDABOUT.donutInner) * s.tile * k;
+  for (const [cx, cy] of rounds) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, ((ROUNDABOUT.donutOuter + ROUNDABOUT.donutInner) / 2) * s.tile * k, 0, Math.PI * 2);
+    ctx.stroke();
+  }
   strokePrims(ctx, prims, k, LINE.width, "#111114", "butt");
   const marks = s.objects.filter((o) => o.kind === "mark").map((m) => markPrim(m as never));
   strokePrims(ctx, marks, k, LINE.width, "#111114", "butt");

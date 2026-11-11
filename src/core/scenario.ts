@@ -4,7 +4,19 @@
  * (como en la vista superior). Los ángulos se miden desde +x hacia +y.
  */
 
-export type TileType = "straight" | "curve" | "tee" | "cross";
+export type TileType = "straight" | "curve" | "tee" | "cross" | "roundabout" | "turnaround";
+
+/** Piezas de pista, en el orden de la paleta del editor. */
+export const TILE_TYPES: TileType[] = ["straight", "curve", "tee", "cross", "roundabout", "turnaround"];
+/** Nombre de cada pieza en la interfaz. */
+export const TILE_NAME: Record<TileType, string> = {
+  straight: "Recta",
+  curve: "Curva",
+  tee: "Cruce en T",
+  cross: "Cruce",
+  roundabout: "Glorieta",
+  turnaround: "Glorieta de retorno",
+};
 
 export interface TileSpec {
   c: number;
@@ -164,6 +176,10 @@ export function validateScenario(data: unknown): string[] {
     if (typeof s[key] !== "number" || !(s[key]! > 0)) errors.push(`Falta un número válido en "${key}".`);
   }
   if (!Array.isArray(s.tiles)) errors.push("Falta la lista de piezas de pista.");
+  else {
+    const bad = s.tiles.find((t) => !TILE_TYPES.includes(t?.type));
+    if (bad) errors.push(`Pieza de pista desconocida: «${String(bad?.type)}».`);
+  }
   if (!Array.isArray(s.objects)) errors.push("Falta la lista de objetos.");
   if (!Array.isArray(s.zones)) errors.push("Falta la lista de zonas.");
   if (!s.start || typeof s.start.x !== "number") errors.push("Falta la posición inicial del robot.");

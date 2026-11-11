@@ -4,7 +4,7 @@
  */
 import { LINE } from "../core/config";
 import { clampToMat } from "../core/robot";
-import { EXTRA_SIGNS, inRect, matHeight, matWidth, newId, OFFICIAL_SIGNS, SIGN_INFO, validateScenario, type Scenario, type SignType, type TileType, type WorldObject, type Zone } from "../core/scenario";
+import { EXTRA_SIGNS, inRect, matHeight, matWidth, newId, OFFICIAL_SIGNS, SIGN_INFO, TILE_NAME, TILE_TYPES, validateScenario, type Scenario, type SignType, type TileType, type WorldObject, type Zone } from "../core/scenario";
 import { PROPS } from "../core/world";
 import { distPrim, E, markPrim, N, S, tileMask, W } from "../core/track";
 import { SCENARIOS, SCENARIO_LIST } from "../scenarios/defaults";
@@ -36,6 +36,8 @@ const TILE_SVG: Record<TileType | "erase", string> = {
   curve: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M12 22a10 10 0 0 1 10-10" fill="none" stroke="currentColor" stroke-width="3"/></svg>',
   tee: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h20M12 12v10" stroke="currentColor" stroke-width="3"/></svg>',
   cross: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h20M12 2v20" stroke="currentColor" stroke-width="3"/></svg>',
+  roundabout: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h4.6M17.4 12H22" stroke="currentColor" stroke-width="3"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="2.1" fill="none" stroke="#c084fc" stroke-width="1.8"/></svg>',
+  turnaround: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M12 2v4.6" stroke="currentColor" stroke-width="3"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="2.1" fill="none" stroke="#c084fc" stroke-width="1.8"/></svg>',
   erase: ICON.trash,
 };
 
@@ -65,7 +67,7 @@ export class ScenarioEditor implements PointerDelegate {
     const img = (sign: SignType) => `<img alt="" src="${signThumb(sign)}">`;
     const tiles = h("div", { class: "palette" },
       toolBtn("Seleccionar y mover", ICON.move, { kind: "select" }, (t) => t.kind === "select"),
-      ...(["straight", "curve", "tee", "cross"] as TileType[]).map((t) => toolBtn({ straight: "Recta", curve: "Curva", tee: "Cruce en T", cross: "Cruce" }[t], TILE_SVG[t], { kind: "tile", type: t }, (x) => x.kind === "tile" && x.type === t)),
+      ...TILE_TYPES.map((t) => toolBtn(TILE_NAME[t], TILE_SVG[t], { kind: "tile", type: t }, (x) => x.kind === "tile" && x.type === t)),
       toolBtn("Borrar pieza", TILE_SVG.erase, { kind: "tile", type: "erase" }, (x) => x.kind === "tile" && x.type === "erase"),
     );
     const signs = h("div", { class: "palette" },
@@ -567,7 +569,7 @@ export class ScenarioEditor implements PointerDelegate {
         this.selected = null;
         return this.renderSel();
       }
-      const name = { straight: "Recta", curve: "Curva", tee: "Cruce en T", cross: "Cruce" }[t.type];
+      const name = TILE_NAME[t.type];
       box.append(h("p", {}, h("b", {}, `Pieza: ${name}`), ` en la casilla (${sel.c + 1}, ${sel.r + 1})`), actions("Girar 90°"), tip("Arrástrala a otra casilla para moverla (si está ocupada, se intercambian). Clic otra vez sobre ella: gira 90°. Tecla Supr: eliminar."));
       return;
     }

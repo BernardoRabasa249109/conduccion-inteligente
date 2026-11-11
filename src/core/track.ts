@@ -25,6 +25,15 @@ export type Prim = Seg | Arc;
 /** Lados de una pieza: N=1, E=2, S=4, W=8. */
 export const N = 1, E = 2, S = 4, W = 8;
 
+/**
+ * Glorietas (como las del tapete de referencia): un anillo negro en el centro
+ * de la pieza, con una dona morada adentro y un disco blanco alrededor.
+ * Medidas en fracción del lado de la pieza (30 cm → anillo de 7.8 cm de radio).
+ * La dona morada es decoración: los sensores de línea solo leen la línea negra.
+ */
+export const ROUNDABOUT = { ring: 0.26, donutOuter: 0.14, donutInner: 0.066 } as const;
+export const isRoundabout = (type: TileType) => type === "roundabout" || type === "turnaround";
+
 export function tileMask(type: TileType, rot: number): number {
   const r = ((rot % 4) + 4) % 4;
   switch (type) {
@@ -36,6 +45,12 @@ export function tileMask(type: TileType, rot: number): number {
       return (N | E | S | W) & ~[N, E, S, W][r];
     case "cross":
       return N | E | S | W;
+    // Glorieta en una recta: entra por un lado y sale por el opuesto (como la recta).
+    case "roundabout":
+      return r % 2 === 0 ? E | W : N | S;
+    // Glorieta de retorno: una sola entrada (arriba sin girar), el robot da la vuelta en el anillo.
+    case "turnaround":
+      return [N, E, S, W][r];
   }
 }
 
@@ -58,6 +73,19 @@ export function tilePrims(tile: TileSpec, t: number): Prim[] {
     if (mask === (E | S)) out.push({ kind: "arc", c: [ox + t, oy + t], r: half, a0: Math.PI, sweep: Math.PI / 2 });
     if (mask === (S | W)) out.push({ kind: "arc", c: [ox, oy + t], r: half, a0: (3 * Math.PI) / 2, sweep: Math.PI / 2 });
     if (mask === (W | N)) out.push({ kind: "arc", c: [ox, oy], r: half, a0: 0, sweep: Math.PI / 2 });
+    return out;
+  }
+  if (isRoundabout(tile.type)) {
+    // Anillo completo y, desde el anillo, un tramo hacia cada lado conectado.
+    const R = ROUNDABOUT.ring * t;
+    out.push({ kind: "arc", c: center, r: R, a0: 0, sweep: Math.PI * 2 });
+    for (const side of [N, E, S, W]) {
+      if (!(mask & side)) continue;
+      const m = sideMid(side, ox, oy, t);
+      const d = Math.hypot(m[0] - center[0], m[1] - center[1]);
+      const from: Vec = [center[0] + ((m[0] - center[0]) / d) * R, center[1] + ((m[1] - center[1]) / d) * R];
+      out.push({ kind: "seg", a: from, b: m });
+    }
     return out;
   }
   // Rectas, T y cruces: un tramo desde el centro hacia cada lado conectado.
