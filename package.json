@@ -13,7 +13,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "figure": "node scripts/build-figure.mjs",
-    "semaforo": "node scripts/optimizar-semaforo.mjs",
+    "semaforo": "node scripts/optimizar-modelos.mjs semaforo",
+    "maniqui": "node scripts/optimizar-modelos.mjs maniqui",
     "examples": "vite-node scripts/export-examples.ts"
   },
   "dependencies": {

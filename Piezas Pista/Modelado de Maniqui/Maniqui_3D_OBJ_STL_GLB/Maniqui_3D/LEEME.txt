@@ -1,0 +1,20 @@
+MANIQUI 3D PARA SIMULADOR
+
+Modelo original simplificado creado a partir de la referencia visual: cabeza y manos grises sin rostro ni cabello, polo naranja, pantalones azul marino y tenis blancos. Solo el personaje; sin piso, aro ni escenario.
+
+ARCHIVOS
+- maniqui.glb: recomendado para el simulador WebGL y para entregar a Claude. Contiene geometria, colores y objetos separados en un archivo.
+- maniqui.obj + maniqui.mtl: geometria y colores. Mantener ambos archivos juntos al importar. Escala aproximada de 1.73 metros de altura, eje Z vertical.
+- maniqui_180mm.stl: superficie unificada, altura 180 mm; STL no contiene colores ni materiales.
+- maniqui.blend: fuente editable en Blender 4.3 o posterior. Incluye camara y luces para la vista previa; no contiene escenario. Los OBJ, GLB y STL solo contienen el personaje.
+- vista_previa.png: render del modelo real incluido, con fondo transparente.
+- verificacion.json: comprobacion geometrica del STL.
+
+ALCANCE
+Es una interpretacion simplificada de la imagen, no una reconstruccion exacta ni un escaneo. Las prendas y articulaciones tienen formas simplificadas. La version visual conserva piezas con nombres; no incluye esqueleto, rig ni animaciones. En Blender puedes ajustar proporciones y agregar un rig. Para un simulador, la escala puede adaptarse al robot y al escenario.
+
+PARA CLAUDE
+Usa maniqui.glb como personaje peatonal del simulador. Conserva sus materiales. Ajusta escala y orientacion a la escena y manten los pies sobre el suelo. El modelo no contiene animaciones: prepara un rig o una jerarquia de articulaciones si necesitas que camine. Evita deformar el modelo completo como una sola pieza.
+
+IMPRESION 3D
+El STL combina las piezas mediante remallado y pierde algunos detalles finos. Su altura numerica es de 180 mm. Importa como milimetros. Revisa orientacion y soportes en tu laminador; manos y brazos pueden necesitarlos. No se ha realizado una impresion fisica de prueba. No incluye base.

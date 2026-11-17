@@ -35,7 +35,7 @@ function drive(s: Scenario, id: string, secs = 45) {
   return { cm: sim.robot.odometer, onLine: near / (secs * 50), cells };
 }
 
-const NEW: TileType[] = ["lcorner", "fork", "deadend", "scurve", "detour", "bay", "gap"];
+const NEW: TileType[] = ["lcorner", "fork", "deadend", "scurve", "detour", "bay", "parking", "gap"];
 
 describe("conexiones de las piezas nuevas", () => {
   it("los lados conectados giran con la pieza (N→E→S→W)", () => {
@@ -45,7 +45,7 @@ describe("conexiones de las piezas nuevas", () => {
     expect(tileMask("fork", 0)).toBe(S | E | W);
     expect(tileMask("deadend", 0)).toBe(S);
     expect(tileMask("lcorner", 0)).toBe(N | E);
-    for (const t of ["scurve", "detour", "bay", "gap"] as TileType[]) expect(tileMask(t, 0)).toBe(N | S);
+    for (const t of ["scurve", "detour", "bay", "parking", "gap"] as TileType[]) expect(tileMask(t, 0)).toBe(N | S);
   });
   it("en cada giro, hay línea justo en los lados conectados y en ningún otro", () => {
     for (const type of NEW) {
@@ -76,7 +76,7 @@ describe("conexiones de las piezas nuevas", () => {
 });
 
 describe("un seguidor que recupera la línea recorre cada pieza en los dos sentidos", () => {
-  for (const type of ["scurve", "detour", "bay", "gap"] as TileType[]) {
+  for (const type of ["scurve", "detour", "bay", "parking", "gap"] as TileType[]) {
     for (const [dir, heading] of [["ida", 0], ["vuelta", Math.PI]] as const) {
       it(`${type} (${dir})`, () => {
         const r = drive(loopWith(type, heading), "seguidor-inteligente");
@@ -155,5 +155,19 @@ describe("retorno en U: no pisa piezas", () => {
     const s = { cols: 6, rows: 4, tiles: [T(3, 0, "detour", 1), T(4, 0, "bay", 1)] };
     const first = uTurnOptions(s, 3, 1)[0];
     expect(first.some((t) => s.tiles.some((q) => q.c === t.c && q.r === t.r))).toBe(false);
+  });
+});
+
+describe("aparcamiento", () => {
+  const map = new LineMap(withMargin([T(0, 0, "parking")], 1, 1, { x: 15, y: 15, heading: 0 }));
+  it("cuatro ramales que llegan a su barra de tope, a los dos lados de la recta", () => {
+    for (const y of [10.5, 21]) {
+      for (const x of [10, 20]) expect(map.isBlack(30 + x, 30 + y), `ramal ${x},${y}`).toBe(true);
+      for (const x of [7.2, 22.8]) expect(map.isBlack(30 + x, 30 + y + 1.5), `tope ${x},${y}`).toBe(true);
+      for (const x of [3.6, 26.4]) expect(map.isBlack(30 + x, 30 + y), `número ${x},${y}`).toBe(false);
+    }
+  });
+  it("en la columna del borde del tapete no da el aviso de borde", () => {
+    expect(nearEdge({ tile: 30, cols: 3, rows: 3, tiles: [T(0, 1, "parking")] })).toBeNull();
   });
 });

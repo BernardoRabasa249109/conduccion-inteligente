@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import lightUrl from "../../modelo3D/Semaforo_simulador.glb?url";
+import personUrl from "../../modelo3D/Maniqui_simulador.glb?url";
 import type { LampColor, LightObject, LightState, ObstacleObject, SignObject } from "../core/scenario";
 import { PROPS } from "../core/world";
 import { signFace } from "./signFaces";
@@ -87,8 +88,7 @@ let template: Promise<LightTemplate> | null = null;
  * (salvo las lentes, que cada uno enciende por su cuenta).
  */
 function lightTemplate(): Promise<LightTemplate> {
-  template ??= new GLTFLoader()
-    .setMeshoptDecoder(MeshoptDecoder)
+  template ??= gltfLoader()
     .loadAsync(lightUrl)
     .then((gltf) => {
       const model = gltf.scene;
@@ -189,18 +189,52 @@ export class LightModel {
   }
 }
 
+/** Lector de los modelos optimizados (comprimidos con meshopt). */
+const gltfLoader = () => new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+
+let personTemplate: Promise<THREE.Object3D> | null = null;
+/**
+ * Maniquí de las personas («Piezas Pista/Modelado de Maniqui», copia optimizada
+ * con `npm run maniqui`): mide 1 de alto, pies en el tapete y mira hacia +X
+ * local, como las señales. Todas las personas comparten formas y materiales.
+ */
+function personModel(): Promise<THREE.Object3D> {
+  personTemplate ??= gltfLoader()
+    .loadAsync(personUrl)
+    .then((gltf) => {
+      const model = gltf.scene;
+      model.rotation.y = Math.PI / 2; // el modelo mira hacia +Z
+      const box = new THREE.Box3().setFromObject(model);
+      model.scale.setScalar(1 / (box.max.y - box.min.y));
+      const fit = new THREE.Box3().setFromObject(model);
+      const c = fit.getCenter(new THREE.Vector3());
+      model.position.set(-c.x, -fit.min.y, -c.z);
+      model.traverse((x) => {
+        const m = x as THREE.Mesh;
+        if (!m.isMesh) return;
+        m.geometry.userData.shared = true;
+        const mat = m.material as THREE.MeshStandardMaterial;
+        mat.userData.shared = true;
+        // Sin reflejos de entorno en la escena: nada de acabado metálico.
+        mat.metalness = Math.min(mat.metalness, 0.15);
+      });
+      const holder = new THREE.Group();
+      holder.add(model);
+      return holder;
+    });
+  return personTemplate;
+}
+
 export function buildObstacle(o: ObstacleObject): THREE.Group {
   const g = new THREE.Group();
   g.add(softShadow(Math.max(o.w, o.d) / 2));
   if (o.shape === "persona") {
-    const body = std(0xf08a3c);
-    const legs = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.6, 6, 14), std(0x3b4f8c));
-    legs.position.y = 3;
-    const torso = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 1.8, 5, 16), body);
-    torso.position.y = 8.5;
-    const head = new THREE.Mesh(new THREE.SphereGeometry(1.6, 18, 14), std(0xf2c9a0));
-    head.position.y = 12.6;
-    g.add(legs, torso, head);
+    // Maniquí a la altura de la persona (14 cm en los escenarios).
+    void personModel().then((t) => {
+      const m = t.clone();
+      m.scale.setScalar(o.h);
+      g.add(m);
+    });
   } else {
     const box = new THREE.Mesh(new THREE.BoxGeometry(o.w, o.h, o.d), std(0xe0a040, { roughness: 0.8 }));
     box.position.y = o.h / 2;

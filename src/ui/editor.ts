@@ -4,6 +4,7 @@
  */
 import { LINE } from "../core/config";
 import { clampToMat } from "../core/robot";
+import { blocked, nearestFree, objectSolid, robotSolid, solidMove, solidsOf, solidStep, type Solid } from "../core/solid";
 import { EXTRA_SIGNS, inRect, matHeight, matWidth, newId, OFFICIAL_SIGNS, SIGN_INFO, TILE_NAME, TILE_TYPES, validateScenario, type Scenario, type SignType, type TileType, type WorldObject, type Zone } from "../core/scenario";
 import { PROPS } from "../core/world";
 import { distPrim, E, edgeClearance, markPrim, N, nearEdge, PEN_SHAPES, S, tileMask, uTurnOptions, W, type Prim } from "../core/track";
@@ -18,6 +19,13 @@ const sameSel = (a: Sel | null, b: Sel | null) => !!a && !!b && JSON.stringify(a
 /** Centro y ángulo de lo seleccionado (radianes, mismo sentido que el robot). */
 type Place = { x: number; y: number; a: number };
 const STEP15 = Math.PI / 12;
+/** Lo que sobresale del centro de un objeto en x e y, con un giro dado. */
+function objExtent(o: WorldObject, a: number): [number, number] {
+  if (o.kind === "sign") return [PROPS.signBaseR, PROPS.signBaseR];
+  if (o.kind === "light") return [PROPS.lightBaseR, PROPS.lightBaseR];
+  if (o.kind === "mark") return rotExt(o.length / 2, LINE.width / 2, a);
+  return rotExt(o.w / 2, o.d / 2, a);
+}
 /** Medio ancho y medio fondo, en ejes del tapete, de un rectángulo girado. */
 const rotExt = (hw: number, hd: number, a: number): [number, number] => [Math.abs(hw * Math.cos(a)) + Math.abs(hd * Math.sin(a)), Math.abs(hw * Math.sin(a)) + Math.abs(hd * Math.cos(a))];
 
@@ -60,6 +68,7 @@ const TILE_SVG: Record<TileType | "erase" | "uturn", string> = {
   scurve: penIcon("scurve"),
   detour: penIcon("detour", '<rect x="11.5" y="11" width="6.5" height="2" fill="#f97316"/>'),
   bay: penIcon("bay", '<rect x="18.6" y="10.6" width="3" height="3" fill="#2563eb"/>'),
+  parking: penIcon("parking", `<rect x="17.6" y="3.2" width="3.2" height="3.2" fill="#2563eb"/>`),
   gap: penIcon("gap"),
   uturn: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M7 2v9a5 5 0 0 0 10 0V2" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>',
   erase: ICON.trash,
@@ -300,6 +309,13 @@ export class ScenarioEditor implements PointerDelegate {
       return true;
     }
     if (t.kind === "start") {
+      // El robot tampoco se coloca encima de un objeto: va al lugar libre más cercano.
+      const free = nearestFree({ x, y, a: s.start.heading }, robotSolid, solidsOf(s), (p) => this.insideMat(null, p));
+      if (!free) {
+        toast("No hay lugar libre ahí para el robot: los objetos no se pueden atravesar.", "warn");
+        return true;
+      }
+      ({ x, y } = free);
       s.start = { x, y, heading: s.start.heading };
       this.app.sim.placeRobot(x, y, s.start.heading);
       this.setTool({ kind: "select" });
@@ -346,7 +362,19 @@ export class ScenarioEditor implements PointerDelegate {
       return true;
     }
     if (obj) {
-      s.objects.push(obj);
+      // Un objeto nuevo no cae encima de otro ni del robot: va al lugar libre más cercano.
+      const o = obj;
+      if (objectSolid(o)) {
+        const r = this.app.sim.robot, a = o.kind === "sign" || o.kind === "light" ? o.facing : o.kind === "obstacle" ? o.rot : 0;
+        const free = nearestFree({ x: o.x, y: o.y, a }, (p) => objectSolid(o, p)!, solidsOf(s, { robot: { x: r.x, y: r.y, a: r.heading } }), (p) => this.insideMat(o, p));
+        if (!free) {
+          toast("No hay lugar libre ahí: los objetos no se pueden encimar.", "warn");
+          return true;
+        }
+        o.x = free.x;
+        o.y = free.y;
+      }
+      s.objects.push(o);
       this.selected = { kind: "object", id };
       this.changed();
     }
@@ -430,10 +458,31 @@ export class ScenarioEditor implements PointerDelegate {
     if (sel.kind !== "object") return [0, 0];
     const o = this.s.objects.find((q) => q.id === sel.id);
     if (!o) return [0, 0];
-    if (o.kind === "sign") return [PROPS.signBaseR, PROPS.signBaseR];
-    if (o.kind === "light") return [PROPS.lightBaseR, PROPS.lightBaseR];
-    if (o.kind === "mark") return rotExt(o.length / 2, LINE.width / 2, a);
-    return rotExt(o.w / 2, o.d / 2, a);
+    return objExtent(o, a);
+  }
+
+  /**
+   * Forma sólida de lo seleccionado y lo que le estorba: los demás objetos y el
+   * robot. Nada se atraviesa (las franjas y las zonas son pintura: no cuentan).
+   */
+  private solidOf(sel: Sel): { shape: (p: Place) => Solid; others: Solid[] } | null {
+    const s = this.s, r = this.app.sim.robot;
+    if (sel.kind === "start") return { shape: robotSolid, others: solidsOf(s) };
+    if (sel.kind !== "object") return null;
+    const o = s.objects.find((q) => q.id === sel.id);
+    if (!o || !objectSolid(o)) return null;
+    return { shape: (p) => objectSolid(o, p)!, others: solidsOf(s, { ignoreId: o.id, robot: { x: r.x, y: r.y, a: r.heading } }) };
+  }
+
+  /** ¿La pose cabe entera dentro del tapete? */
+  private insideMat(o: WorldObject | null, p: Place): boolean {
+    const W = matWidth(this.s), H = matHeight(this.s);
+    if (!o) {
+      const c = clampToMat({ x: p.x, y: p.y, heading: p.a }, W, H);
+      return Math.abs(c.x - p.x) < 1e-6 && Math.abs(c.y - p.y) < 1e-6;
+    }
+    const [hx, hy] = objExtent(o, p.a);
+    return p.x - hx >= 0 && p.y - hy >= 0 && p.x + hx <= W && p.y + hy <= H;
   }
 
   /** Fija el destino (dentro del tapete); tick() lleva el objeto hasta allí. */
@@ -450,6 +499,9 @@ export class ScenarioEditor implements PointerDelegate {
     }
     to.x = Math.round(to.x * 10) / 10;
     to.y = Math.round(to.y * 10) / 10;
+    // Sólido: si en el camino hay otro objeto o el robot, se detiene al tocarlo y se desliza por su costado.
+    const so = this.solidOf(sel), cur = this.placeOf(sel);
+    if (so && cur) to = solidMove(cur, to, so.shape, so.others);
     this.goal = { sel, to };
   }
 
@@ -464,7 +516,17 @@ export class ScenarioEditor implements PointerDelegate {
     }
     const k = 1 - Math.exp(-Math.min(dt, 0.1) / 0.075);
     const da = Math.atan2(Math.sin(g.to.a - cur.a), Math.cos(g.to.a - cur.a));
-    const next = { x: cur.x + (g.to.x - cur.x) * k, y: cur.y + (g.to.y - cur.y) * k, a: cur.a + da * k };
+    let next = { x: cur.x + (g.to.x - cur.x) * k, y: cur.y + (g.to.y - cur.y) * k, a: cur.a + da * k };
+    // También mientras se desliza: nunca queda encimado, ni por un instante.
+    const so = this.solidOf(g.sel);
+    if (so && !blocked(so.shape(cur), so.others) && blocked(so.shape(next), so.others)) {
+      next = solidStep(cur, next, so.shape, so.others);
+      if (Math.hypot(next.x - cur.x, next.y - cur.y) < 1e-3 && Math.abs(next.a - cur.a) < 1e-4) {
+        this.goal = null;
+        if (!this.press) this.changed();
+        return;
+      }
+    }
     const done = Math.hypot(g.to.x - next.x, g.to.y - next.y) < 0.03 && Math.abs(da) * (1 - k) < 0.001;
     this.applyPlace(g.sel, done ? g.to : next);
     if (done) {

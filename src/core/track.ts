@@ -105,6 +105,20 @@ export const PEN_SHAPES: Partial<Record<TileType, { mask: number; prims: () => P
       { kind: "seg", a: [18.5, 15], b: [23.5, 15] },
     ],
   },
+  // Aparcamiento: la recta pasa por el centro y de ella salen cuatro ramales a sus lugares
+  // (1 y 3 arriba, 2 y 4 abajo), cada uno con una barra de tope al final.
+  parking: {
+    mask: N | S,
+    prims: () => [
+      { kind: "seg", a: [15, 0], b: [15, 30] },
+      ...[10.5, 21].flatMap((y): Prim[] => [
+        { kind: "seg", a: [15, y], b: [7.2, y] },
+        { kind: "seg", a: [15, y], b: [22.8, y] },
+        { kind: "seg", a: [7.2, y - 1.8], b: [7.2, y + 1.8] },
+        { kind: "seg", a: [22.8, y - 1.8], b: [22.8, y + 1.8] },
+      ]),
+    ],
+  },
   // Línea con corte: recta con un tramo sin línea (como la imagen: un poco más que el ancho de la línea).
   gap: {
     mask: N | S,

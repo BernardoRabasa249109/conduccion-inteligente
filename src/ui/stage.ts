@@ -4,6 +4,7 @@
  * También gestiona el puntero: acercar, desplazar y colocar el robot.
  */
 import { clampToMat } from "../core/robot";
+import { blocked, robotSolid, solidMove, solidsOf, solidStep } from "../core/solid";
 import type { LightObject, LightState, Pose, VisionLabel } from "../core/scenario";
 import { Steady } from "../core/steady";
 import type { Sim } from "../core/sim";
@@ -371,7 +372,17 @@ export class StageUI {
   private aimRobot(x: number, y: number, heading: number) {
     const sim = this.sim(), w = sim.world;
     if (!this.placeTarget) this.placedAt = { x: sim.robot.x, y: sim.robot.y, heading: sim.robot.heading };
-    this.placeTarget = clampToMat({ x, y, heading }, w.width, w.height);
+    const t = clampToMat({ x, y, heading }, w.width, w.height);
+    // Sólido: el robot no se coloca encima de señales, semáforos ni obstáculos.
+    const r = sim.robot, others = this.robotObstacles();
+    const p = solidMove({ x: r.x, y: r.y, a: r.heading }, { x: t.x, y: t.y, a: t.heading }, robotSolid, others);
+    this.placeTarget = { x: p.x, y: p.y, heading: p.a };
+  }
+
+  /** Lo que el robot no puede atravesar al colocarlo (sin los obstáculos que ya se retiraron). */
+  private robotObstacles() {
+    const sim = this.sim();
+    return solidsOf(sim.scenario, { present: (o) => sim.world.isPresent(o) });
   }
 
   /** Cada fotograma: el robot se desliza hacia su pose de destino. */
@@ -385,7 +396,17 @@ export class StageUI {
     }
     const k = 1 - Math.exp(-Math.min(dt, 0.1) / 0.075);
     const dh = Math.atan2(Math.sin(t.heading - r.heading), Math.cos(t.heading - r.heading));
-    const nx = r.x + (t.x - r.x) * k, ny = r.y + (t.y - r.y) * k, nh = r.heading + dh * k;
+    let nx = r.x + (t.x - r.x) * k, ny = r.y + (t.y - r.y) * k, nh = r.heading + dh * k;
+    // También mientras se desliza: nunca queda encimado.
+    const others = this.robotObstacles(), cur = { x: r.x, y: r.y, a: r.heading };
+    if (!blocked(robotSolid(cur), others) && blocked(robotSolid({ x: nx, y: ny, a: nh }), others)) {
+      const p = solidStep(cur, { x: nx, y: ny, a: nh }, robotSolid, others);
+      if (Math.hypot(p.x - r.x, p.y - r.y) < 1e-3 && Math.abs(p.a - r.heading) < 1e-4) {
+        this.placeTarget = null;
+        return;
+      }
+      ({ x: nx, y: ny, a: nh } = p);
+    }
     if (Math.hypot(t.x - nx, t.y - ny) < 0.03 && Math.abs(dh) * (1 - k) < 0.001) {
       sim.placeRobot(t.x, t.y, t.heading);
       this.placeTarget = null;

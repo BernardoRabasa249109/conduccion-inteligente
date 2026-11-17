@@ -232,6 +232,22 @@ const PIECE_DECOR: Partial<Record<TileType, (ctx: CanvasRenderingContext2D) => v
     cone(ctx, 16.1, 18.9);
   },
   bay: (ctx) => parkingSign(ctx, 26.3, 15, 3.2),
+  parking: (ctx) => {
+    // Lugares numerados (blancos, con esquinas redondeadas) y el letrero «P».
+    const slots: [number, number, string][] = [[1, 10.5, "1"], [18.5, 10.5, "3"], [1, 21, "2"], [18.5, 21, "4"]];
+    for (const [x, y, n] of slots) {
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.roundRect(x, y - 3.6, 10.5, 7.2, 1.4);
+      ctx.fill();
+      ctx.fillStyle = "#6b21a8";
+      ctx.font = "bold 3.8px system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(n, x < 15 ? 3.6 : 26.4, y + 0.2);
+    }
+    parkingSign(ctx, 26.6, 3.4, 4.2);
+  },
 };
 
 /** Comprueba que el dibujo y el modelo coinciden (lo usa la verificación interna). */
