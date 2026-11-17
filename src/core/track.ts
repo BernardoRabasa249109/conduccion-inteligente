@@ -3,7 +3,7 @@
  * arcos; los sensores calculan su lectura midiendo la distancia a esas formas,
  * y la textura del suelo se dibuja con exactamente las mismas formas.
  */
-import { LINE } from "./config";
+import { LINE, ROBOT } from "./config";
 import type { MarkObject, Scenario, TileSpec, TileType } from "./scenario";
 
 export type Vec = [number, number];
@@ -34,8 +34,104 @@ export const N = 1, E = 2, S = 4, W = 8;
 export const ROUNDABOUT = { ring: 0.26, donutOuter: 0.14, donutInner: 0.066 } as const;
 export const isRoundabout = (type: TileType) => type === "roundabout" || type === "turnaround";
 
+// ───────── Piezas dibujadas con «pluma» ─────────
+// Cada pieza se describe una sola vez, sin girar (giro 0, como en su imagen de
+// referencia), en centímetros de una pieza de 30 cm: la pluma avanza y gira.
+// Después se gira de 90 en 90° alrededor del centro y se escala al tamaño real.
+
+/** Traza una línea como una tortuga: avanzar y girar (grados; + derecha, − izquierda). */
+class Pen {
+  readonly prims: Prim[] = [];
+  constructor(private x: number, private y: number, private h: number) {}
+  line(len: number): this {
+    const nx = this.x + Math.cos(this.h) * len, ny = this.y + Math.sin(this.h) * len;
+    this.prims.push({ kind: "seg", a: [this.x, this.y], b: [nx, ny] });
+    this.x = nx;
+    this.y = ny;
+    return this;
+  }
+  turn(r: number, deg: number): this {
+    const s = Math.sign(deg), a = (Math.abs(deg) * Math.PI) / 180;
+    const cx = this.x + Math.cos(this.h + (s * Math.PI) / 2) * r, cy = this.y + Math.sin(this.h + (s * Math.PI) / 2) * r;
+    const a0 = Math.atan2(this.y - cy, this.x - cx), a1 = a0 + s * a;
+    this.prims.push({ kind: "arc", c: [cx, cy], r, a0: s > 0 ? a0 : a1, sweep: a });
+    this.x = cx + Math.cos(a1) * r;
+    this.y = cy + Math.sin(a1) * r;
+    this.h += s * a;
+    return this;
+  }
+}
+const UP = -Math.PI / 2, DOWN = Math.PI / 2;
+const pen = (x: number, y: number, h: number) => new Pen(x, y, h);
+
+/** Piezas descritas con la pluma: lados conectados sin girar y sus formas (en cm de una pieza de 30). */
+export const PEN_SHAPES: Partial<Record<TileType, { mask: number; prims: () => Prim[] }>> = {
+  // Y: tallo abajo; los brazos salen en diagonal y llegan rectos a los lados (los lados se unen por su centro).
+  fork: {
+    mask: S | E | W,
+    prims: () => [
+      ...pen(15, 30, UP).line(6).prims,
+      ...pen(15, 24, UP).turn(6, -45).line(4.243).turn(6, -45).line(6).prims,
+      ...pen(15, 24, UP).turn(6, 45).line(4.243).turn(6, 45).line(6).prims,
+    ],
+  },
+  // Calle sin salida: tallo abajo y un bucle grande arriba para dar la vuelta.
+  deadend: {
+    mask: S,
+    prims: () => [...pen(15, 30, UP).line(11).prims, { kind: "arc", c: [15, 11.5], r: 7.5, a0: 0, sweep: Math.PI * 2 }],
+  },
+  // Curva en S: dos vueltas cerradas unidas por el trazo del centro, como la letra.
+  scurve: {
+    mask: N | S,
+    prims: () => pen(15, 0, DOWN).turn(5, 90).line(3).turn(5, -180).line(16).turn(5, 180).line(3).turn(5, -90).prims,
+  },
+  // Desvío por obras: la línea rodea la zona de obras por un lado.
+  detour: {
+    mask: N | S,
+    prims: () => pen(15, 0, DOWN).line(1).turn(5, 90).turn(5, -90).line(8).turn(5, -90).turn(5, 90).line(1).prims,
+  },
+  // Bahía de parada: la recta sigue y a un lado sale una bahía con su franja de parada.
+  bay: {
+    mask: N | S,
+    prims: () => [
+      { kind: "seg", a: [15, 0], b: [15, 30] },
+      ...pen(15, 1, DOWN).turn(6, -60).turn(6, 60).line(7.22).turn(6, 60).turn(6, -60).prims,
+      { kind: "seg", a: [18.5, 15], b: [23.5, 15] },
+    ],
+  },
+  // Línea con corte: recta con un tramo sin línea (como la imagen: un poco más que el ancho de la línea).
+  gap: {
+    mask: N | S,
+    prims: () => [
+      { kind: "seg", a: [15, 0], b: [15, 13.4] },
+      { kind: "seg", a: [15, 16.6], b: [15, 30] },
+    ],
+  },
+};
+
+/** Gira los lados conectados de 90 en 90° en sentido horario (N→E→S→W). */
+export function rotateMask(mask: number, rot: number): number {
+  let m = mask;
+  for (let i = 0; i < (((rot % 4) + 4) % 4); i++) m = ((m << 1) | (m >> 3)) & 15;
+  return m;
+}
+
+/** Lleva una forma de la pieza sin girar (cm de una pieza de 30) a su casilla, giro y tamaño. */
+function placePrim(p: Prim, tile: TileSpec, t: number): Prim {
+  const k = t / 30, rot = ((tile.rot % 4) + 4) % 4, ox = tile.c * t, oy = tile.r * t;
+  const at = ([x, y]: Vec): Vec => {
+    let dx = x - 15, dy = y - 15;
+    for (let i = 0; i < rot; i++) [dx, dy] = [-dy, dx];
+    return [ox + (15 + dx) * k, oy + (15 + dy) * k];
+  };
+  if (p.kind === "seg") return { kind: "seg", a: at(p.a), b: at(p.b) };
+  return { kind: "arc", c: at(p.c), r: p.r * k, a0: p.a0 + (rot * Math.PI) / 2, sweep: p.sweep };
+}
+
 export function tileMask(type: TileType, rot: number): number {
   const r = ((rot % 4) + 4) % 4;
+  const shape = PEN_SHAPES[type];
+  if (shape) return rotateMask(shape.mask, r);
   switch (type) {
     case "straight":
       return r % 2 === 0 ? E | W : N | S;
@@ -51,6 +147,8 @@ export function tileMask(type: TileType, rot: number): number {
     // Glorieta de retorno: una sola entrada (arriba sin girar), el robot da la vuelta en el anillo.
     case "turnaround":
       return [N, E, S, W][r];
+    default:
+      return 0;
   }
 }
 
@@ -63,6 +161,8 @@ function sideMid(side: number, ox: number, oy: number, t: number): Vec {
 }
 
 export function tilePrims(tile: TileSpec, t: number): Prim[] {
+  const shape = PEN_SHAPES[tile.type];
+  if (shape) return shape.prims().map((p) => placePrim(p, tile, t));
   const ox = tile.c * t, oy = tile.r * t;
   const center: Vec = [ox + t / 2, oy + t / 2];
   const mask = tileMask(tile.type, tile.rot);
@@ -93,6 +193,78 @@ export function tilePrims(tile: TileSpec, t: number): Prim[] {
     if (mask & side) out.push({ kind: "seg", a: center, b: sideMid(side, ox, oy, t) });
   }
   return out;
+}
+
+/**
+ * Distancia mínima (cm) entre la línea de una pieza y el borde del tapete, sin
+ * contar sus extremos (los extremos sueltos ya se avisan aparte). Si es menor que
+ * el radio del robot, el robot chocaría con el borde al seguir esa línea.
+ */
+export function edgeClearance(tile: TileSpec, s: Pick<Scenario, "tile" | "cols" | "rows">): number {
+  const t = s.tile, W = s.cols * t, H = s.rows * t;
+  const ports = [N, E, S, W].filter((side) => tileMask(tile.type, tile.rot) & side).map((side) => sideMid(side, tile.c * t, tile.r * t, t));
+  let best = Infinity;
+  const check = (x: number, y: number) => {
+    if (ports.some(([px, py]) => Math.hypot(px - x, py - y) < 2)) return;
+    best = Math.min(best, x, y, W - x, H - y);
+  };
+  for (const p of tilePrims(tile, t)) {
+    if (p.kind === "seg") for (let i = 0; i <= 10; i++) check(p.a[0] + ((p.b[0] - p.a[0]) * i) / 10, p.a[1] + ((p.b[1] - p.a[1]) * i) / 10);
+    else for (let i = 0; i <= 32; i++) {
+      const a = p.a0 + (p.sweep * i) / 32;
+      check(p.c[0] + Math.cos(a) * p.r, p.c[1] + Math.sin(a) * p.r);
+    }
+  }
+  return best;
+}
+
+/** Primera pieza cuya línea pasa tan cerca del borde del tapete que el robot chocaría con él. */
+export function nearEdge(s: Pick<Scenario, "tile" | "cols" | "rows" | "tiles">) {
+  return s.tiles.find((t) => edgeClearance(t, s) < ROBOT.collisionRadius + 1.5) ?? null;
+}
+
+/** Curvas (sin girar → giro) que forman un retorno en U en dos casillas, según hacia dónde abre. */
+const U_PAIRS: Record<"N" | "S" | "E" | "W", { second: [number, number]; rots: [number, number]; arms: [number, number] }> = {
+  // Abre hacia arriba: casilla izquierda N|E y derecha W|N.
+  N: { second: [1, 0], rots: [0, 3], arms: [N, N] },
+  S: { second: [1, 0], rots: [1, 2], arms: [S, S] },
+  // Abre hacia la derecha: casilla de arriba E|S y de abajo N|E.
+  E: { second: [0, 1], rots: [1, 0], arms: [E, E] },
+  W: { second: [0, 1], rots: [2, 3], arms: [W, W] },
+};
+
+/**
+ * Retorno en U: dos curvas que unen dos carriles paralelos en casillas vecinas
+ * (una U con las dos puntas del mismo lado no cabe en una sola casilla).
+ * Devuelve las ocho formas posibles a partir de la casilla elegida, la mejor
+ * primero: la que no pisa otras piezas y conecta más puntas con piezas vecinas.
+ */
+export function uTurnOptions(s: Pick<Scenario, "tiles" | "cols" | "rows">, c: number, r: number): TileSpec[][] {
+  const has = (cc: number, rr: number) => s.tiles.find((q) => q.c === cc && q.r === rr);
+  const sides: [number, number, number, number][] = [[N, 0, -1, S], [E, 1, 0, W], [S, 0, 1, N], [W, -1, 0, E]];
+  const options: { tiles: TileSpec[]; score: number }[] = [];
+  let order = 0;
+  for (const open of ["N", "S", "E", "W"] as const) {
+    const u = U_PAIRS[open];
+    // La casilla elegida puede ser la primera o la segunda de la U.
+    for (const first of [true, false]) {
+      const a: [number, number] = first ? [c, r] : [c - u.second[0], r - u.second[1]];
+      const b: [number, number] = [a[0] + u.second[0], a[1] + u.second[1]];
+      if ([a, b].some(([cc, rr]) => cc < 0 || rr < 0 || cc >= s.cols || rr >= s.rows)) continue;
+      const tiles: TileSpec[] = [{ c: a[0], r: a[1], type: "curve", rot: u.rots[0] }, { c: b[0], r: b[1], type: "curve", rot: u.rots[1] }];
+      let score = 0;
+      tiles.forEach((t, i) => {
+        const [side, dc, dr, opp] = sides.find((q) => q[0] === u.arms[i])!;
+        const nb = has(t.c + dc, t.r + dr);
+        if (nb && tileMask(nb.type, nb.rot) & opp) score += 10;
+      });
+      // Nunca pisa otra pieza si hay una forma libre: solo como último recurso.
+      const other = first ? b : a;
+      if (has(other[0], other[1])) score -= 1000;
+      options.push({ tiles, score: score - order++ * 0.01 });
+    }
+  }
+  return options.sort((x, y) => y.score - x.score).map((o) => o.tiles);
 }
 
 export function markPrim(m: MarkObject): Seg {

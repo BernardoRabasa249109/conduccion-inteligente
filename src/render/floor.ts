@@ -5,7 +5,7 @@
  * como blanco.
  */
 import { LINE } from "../core/config";
-import { matHeight, matWidth, type Scenario } from "../core/scenario";
+import { matHeight, matWidth, type Scenario, type TileType } from "../core/scenario";
 import { isRoundabout, LineMap, markPrim, ROUNDABOUT, strokePrims, tilePrims } from "../core/track";
 
 export const FLOOR_PX = 8;
@@ -138,6 +138,18 @@ export function drawFloor(canvas: HTMLCanvasElement, s: Scenario, opts: { grid?:
     ctx.arc(cx, cy, ((ROUNDABOUT.donutOuter + ROUNDABOUT.donutInner) / 2) * s.tile * k, 0, Math.PI * 2);
     ctx.stroke();
   }
+  // Dibujos impresos de algunas piezas (señal, obras, «P»): decoración, no línea negra.
+  for (const t of s.tiles) {
+    const draw = PIECE_DECOR[t.type];
+    if (!draw) continue;
+    ctx.save();
+    ctx.translate((t.c + 0.5) * s.tile * k, (t.r + 0.5) * s.tile * k);
+    ctx.rotate((((t.rot % 4) + 4) % 4) * (Math.PI / 2));
+    ctx.scale((s.tile * k) / 30, (s.tile * k) / 30);
+    ctx.translate(-15, -15);
+    draw(ctx);
+    ctx.restore();
+  }
   strokePrims(ctx, prims, k, LINE.width, "#111114", "butt");
   const marks = s.objects.filter((o) => o.kind === "mark").map((m) => markPrim(m as never));
   strokePrims(ctx, marks, k, LINE.width, "#111114", "butt");
@@ -148,6 +160,79 @@ export function drawFloor(canvas: HTMLCanvasElement, s: Scenario, opts: { grid?:
   ctx.strokeRect(0.4 * k, 0.4 * k, canvas.width - 0.8 * k, canvas.height - 0.8 * k);
   return canvas;
 }
+
+// ───────── Dibujos impresos de las piezas (en cm de una pieza de 30, sin girar) ─────────
+
+/** Señal «calle sin salida»: cuadro azul con la barra roja y el poste blanco. */
+function deadEndSign(ctx: CanvasRenderingContext2D, x: number, y: number, s: number) {
+  ctx.fillStyle = "#1d4ed8";
+  ctx.fillRect(x - s / 2, y - s / 2, s, s);
+  ctx.fillStyle = "#ef1c1c";
+  ctx.fillRect(x - s * 0.33, y - s * 0.32, s * 0.66, s * 0.16);
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(x - s * 0.08, y - s * 0.16, s * 0.16, s * 0.48);
+}
+
+/** Valla de obras: barra con franjas naranjas y blancas entre dos postes. */
+function barrier(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
+  ctx.save();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(x - w / 2, y - h / 2, w, h);
+  ctx.beginPath();
+  ctx.rect(x - w / 2, y - h / 2, w, h);
+  ctx.clip();
+  ctx.fillStyle = "#f97316";
+  for (let i = -h; i < w + h; i += 1.6) {
+    ctx.beginPath();
+    ctx.moveTo(x - w / 2 + i, y + h / 2);
+    ctx.lineTo(x - w / 2 + i + 0.8, y + h / 2);
+    ctx.lineTo(x - w / 2 + i + 0.8 + h, y - h / 2);
+    ctx.lineTo(x - w / 2 + i + h, y - h / 2);
+    ctx.fill();
+  }
+  ctx.restore();
+  ctx.fillStyle = "#f97316";
+  ctx.fillRect(x - w / 2 - 0.5, y - h / 2 - 0.4, 0.8, h + 0.8);
+  ctx.fillRect(x + w / 2 - 0.3, y - h / 2 - 0.4, 0.8, h + 0.8);
+}
+
+/** Cono de obras visto desde arriba: cuadro naranja con aro blanco. */
+function cone(ctx: CanvasRenderingContext2D, x: number, y: number, s = 2.4) {
+  ctx.fillStyle = "#f97316";
+  ctx.fillRect(x - s / 2, y - s / 2, s, s);
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = s * 0.12;
+  ctx.beginPath();
+  ctx.arc(x, y, s * 0.3, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.arc(x, y, s * 0.11, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/** Letrero de estacionamiento: cuadro azul con la «P» blanca. */
+function parkingSign(ctx: CanvasRenderingContext2D, x: number, y: number, s: number) {
+  ctx.fillStyle = "#1d4ed8";
+  ctx.fillRect(x - s / 2, y - s / 2, s, s);
+  ctx.fillStyle = "#ffffff";
+  ctx.font = `bold ${s * 0.78}px system-ui, sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("P", x, y + s * 0.04);
+}
+
+/** Decoración impresa de cada pieza (los sensores de línea no la leen: no es línea negra). */
+const PIECE_DECOR: Partial<Record<TileType, (ctx: CanvasRenderingContext2D) => void>> = {
+  deadend: (ctx) => deadEndSign(ctx, 24.5, 24.5, 4.6),
+  detour: (ctx) => {
+    barrier(ctx, 16, 15, 8.4, 2.2);
+    cone(ctx, 13.4, 11.2);
+    cone(ctx, 18.8, 11.2);
+    cone(ctx, 16.1, 18.9);
+  },
+  bay: (ctx) => parkingSign(ctx, 26.3, 15, 3.2),
+};
 
 /** Comprueba que el dibujo y el modelo coinciden (lo usa la verificación interna). */
 export function sampleMatches(s: Scenario, canvas: HTMLCanvasElement, x: number, y: number): boolean {

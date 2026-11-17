@@ -6,7 +6,7 @@ import { LINE } from "../core/config";
 import { clampToMat } from "../core/robot";
 import { EXTRA_SIGNS, inRect, matHeight, matWidth, newId, OFFICIAL_SIGNS, SIGN_INFO, TILE_NAME, TILE_TYPES, validateScenario, type Scenario, type SignType, type TileType, type WorldObject, type Zone } from "../core/scenario";
 import { PROPS } from "../core/world";
-import { distPrim, E, markPrim, N, S, tileMask, W } from "../core/track";
+import { distPrim, E, edgeClearance, markPrim, N, nearEdge, PEN_SHAPES, S, tileMask, uTurnOptions, W, type Prim } from "../core/track";
 import { SCENARIOS, SCENARIO_LIST } from "../scenarios/defaults";
 import { signThumb } from "../render/signFaces";
 import type { App } from "./app";
@@ -23,7 +23,7 @@ const rotExt = (hw: number, hd: number, a: number): [number, number] => [Math.ab
 
 type Tool =
   | { kind: "select" }
-  | { kind: "tile"; type: TileType | "erase" }
+  | { kind: "tile"; type: TileType | "erase" | "uturn" }
   | { kind: "sign"; sign: SignType }
   | { kind: "light" }
   | { kind: "obstacle"; shape: "caja" | "alta" | "persona" }
@@ -31,13 +31,36 @@ type Tool =
   | { kind: "zone"; zone: "slow" | "target" | "parking" }
   | { kind: "start" };
 
-const TILE_SVG: Record<TileType | "erase", string> = {
+/** Ícono de una pieza dibujada con pluma: las mismas formas que leen los sensores, en el cuadro de 24. */
+function penIcon(type: TileType, extra = ""): string {
+  const at = (v: number) => (2 + (v * 20) / 30).toFixed(2);
+  const d = PEN_SHAPES[type]!.prims()
+    .map((p: Prim) => {
+      if (p.kind === "seg") return `M${at(p.a[0])} ${at(p.a[1])}L${at(p.b[0])} ${at(p.b[1])}`;
+      const r = ((p.r * 20) / 30).toFixed(2);
+      const pt = (a: number) => `${at(p.c[0] + Math.cos(a) * p.r)} ${at(p.c[1] + Math.sin(a) * p.r)}`;
+      // Un círculo completo se dibuja en dos medias vueltas.
+      if (p.sweep >= Math.PI * 2 - 1e-6) return `M${pt(p.a0)}A${r} ${r} 0 1 1 ${pt(p.a0 + Math.PI)}A${r} ${r} 0 1 1 ${pt(p.a0)}`;
+      return `M${pt(p.a0)}A${r} ${r} 0 ${p.sweep > Math.PI ? 1 : 0} 1 ${pt(p.a0 + p.sweep)}`;
+    })
+    .join("");
+  return `<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="${d}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="butt"/>${extra}</svg>`;
+}
+
+const TILE_SVG: Record<TileType | "erase" | "uturn", string> = {
   straight: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h20" stroke="currentColor" stroke-width="3"/></svg>',
   curve: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M12 22a10 10 0 0 1 10-10" fill="none" stroke="currentColor" stroke-width="3"/></svg>',
   tee: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h20M12 12v10" stroke="currentColor" stroke-width="3"/></svg>',
   cross: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h20M12 2v20" stroke="currentColor" stroke-width="3"/></svg>',
   roundabout: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h4.6M17.4 12H22" stroke="currentColor" stroke-width="3"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="2.1" fill="none" stroke="#c084fc" stroke-width="1.8"/></svg>',
   turnaround: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M12 2v4.6" stroke="currentColor" stroke-width="3"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="2.1" fill="none" stroke="#c084fc" stroke-width="1.8"/></svg>',
+  fork: penIcon("fork"),
+  deadend: penIcon("deadend", '<rect x="16.5" y="16.5" width="3.6" height="3.6" fill="#2563eb"/><rect x="17" y="17" width="2.6" height="0.9" fill="#ef4444"/>'),
+  scurve: penIcon("scurve"),
+  detour: penIcon("detour", '<rect x="11.5" y="11" width="6.5" height="2" fill="#f97316"/>'),
+  bay: penIcon("bay", '<rect x="18.6" y="10.6" width="3" height="3" fill="#2563eb"/>'),
+  gap: penIcon("gap"),
+  uturn: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M7 2v9a5 5 0 0 0 10 0V2" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>',
   erase: ICON.trash,
 };
 
@@ -68,6 +91,7 @@ export class ScenarioEditor implements PointerDelegate {
     const tiles = h("div", { class: "palette" },
       toolBtn("Seleccionar y mover", ICON.move, { kind: "select" }, (t) => t.kind === "select"),
       ...TILE_TYPES.map((t) => toolBtn(TILE_NAME[t], TILE_SVG[t], { kind: "tile", type: t }, (x) => x.kind === "tile" && x.type === t)),
+      toolBtn("Retorno en U (2 casillas)", TILE_SVG.uturn, { kind: "tile", type: "uturn" }, (x) => x.kind === "tile" && x.type === "uturn"),
       toolBtn("Borrar pieza", TILE_SVG.erase, { kind: "tile", type: "erase" }, (x) => x.kind === "tile" && x.type === "erase"),
     );
     const signs = h("div", { class: "palette" },
@@ -175,8 +199,35 @@ export class ScenarioEditor implements PointerDelegate {
     toast("Escenario guardado en este navegador como «personalizado».", "ok");
   }
 
+  /** Último retorno en U puesto: un clic otra vez sobre él cambia hacia dónde abre. */
+  private uturn: { placed: { c: number; r: number; rot: number }[]; options: ReturnType<typeof uTurnOptions>; i: number } | null = null;
+
+  private placeUTurn(c: number, r: number) {
+    const s = this.s;
+    const last = this.uturn;
+    const still = last && last.placed.every((p) => s.tiles.some((q) => q.c === p.c && q.r === p.r && q.type === "curve" && q.rot === p.rot));
+    let options: ReturnType<typeof uTurnOptions>, i = 0;
+    if (last && still && last.placed.some((p) => p.c === c && p.r === r)) {
+      s.tiles = s.tiles.filter((q) => !last.placed.some((p) => p.c === q.c && p.r === q.r));
+      options = last.options;
+      i = (last.i + 1) % options.length;
+    } else {
+      options = uTurnOptions(s, c, r);
+    }
+    const pair = options[i];
+    if (!pair) return;
+    for (const t of pair) {
+      const idx = s.tiles.findIndex((q) => q.c === t.c && q.r === t.r);
+      if (idx >= 0) s.tiles[idx] = { ...t };
+      else s.tiles.push({ ...t });
+    }
+    this.uturn = { placed: pair.map((t) => ({ c: t.c, r: t.r, rot: t.rot })), options, i };
+    toast(i === 0 ? "Retorno en U: dos curvas en casillas vecinas. Clic otra vez sobre la U para cambiar hacia dónde abre." : `Retorno en U: forma ${i + 1} de ${options.length}.`);
+  }
+
   private setTool(t: Tool) {
     this.tool = t;
+    this.uturn = null;
     for (const b of this.toolBtns) b.el.setAttribute("aria-pressed", String(b.match(t)));
     if (t.kind !== "tile") this.app.scene.setHoverTile(null);
     this.app.stage.canvasCursor("");
@@ -206,7 +257,10 @@ export class ScenarioEditor implements PointerDelegate {
   private refreshStatus() {
     this.sizeOut.textContent = `${this.s.cols} × ${this.s.rows} piezas (${this.s.cols * this.s.tile} × ${this.s.rows * this.s.tile} cm)`;
     const open = openEnds(this.s);
-    this.status.textContent = open === 0 ? "Todas las piezas están conectadas." : `Hay ${open} extremo(s) de línea sin conectar: el robot perderá la línea allí.`;
+    const near = nearEdge(this.s);
+    this.status.textContent =
+      (open === 0 ? "Todas las piezas están conectadas." : `Hay ${open} extremo(s) de línea sin conectar: el robot perderá la línea allí.`) +
+      (near ? ` La línea de «${TILE_NAME[near.type]}» (casilla ${near.c + 1}, ${near.r + 1}) pasa muy cerca del borde del tapete: el robot chocaría con el borde. Agrega una columna o fila, o muévela.` : "");
   }
 
   // ───────── Puntero ─────────
@@ -224,6 +278,11 @@ export class ScenarioEditor implements PointerDelegate {
       const cell = this.cellAt(x, y);
       if (!cell) return true;
       const { c, r } = cell;
+      if (t.type === "uturn") {
+        this.placeUTurn(c, r);
+        this.changed();
+        return true;
+      }
       const idx = s.tiles.findIndex((q) => q.c === c && q.r === r);
       if (t.type === "erase") {
         if (idx >= 0) s.tiles.splice(idx, 1);
@@ -232,6 +291,7 @@ export class ScenarioEditor implements PointerDelegate {
         s.tiles[idx].rot = (s.tiles[idx].rot + 1) % 4;
       } else {
         const tile = { c, r, type: t.type, rot: this.bestRotation(c, r, t.type) };
+        this.uturn = null;
         if (idx >= 0) s.tiles[idx] = tile;
         else s.tiles.push(tile);
       }
@@ -607,7 +667,8 @@ export class ScenarioEditor implements PointerDelegate {
     let best = this.rot, score = -1;
     for (let rot = 0; rot < 4; rot++) {
       const mask = tileMask(type, rot);
-      let sc = 0;
+      // Primero, conectar con las vecinas; si empata, que la línea quede lejos del borde del tapete.
+      let sc = Math.min(1, edgeClearance({ c, r, type, rot }, this.s) / 100) * 0.5;
       for (const [side, dc, dr, opp] of [[N, 0, -1, S], [E, 1, 0, W], [S, 0, 1, N], [W, -1, 0, E]]) {
         if (!(mask & side)) continue;
         const nb = this.s.tiles.find((t) => t.c === c + dc && t.r === r + dr);
