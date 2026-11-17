@@ -66,6 +66,12 @@ const pen = (x: number, y: number, h: number) => new Pen(x, y, h);
 
 /** Piezas descritas con la pluma: lados conectados sin girar y sus formas (en cm de una pieza de 30). */
 export const PEN_SHAPES: Partial<Record<TileType, { mask: number; prims: () => Prim[] }>> = {
+  // Esquina en L: tramo recto hasta cerca del centro, vuelta cerrada (5 cm de radio) y tramo recto al lado.
+  // Une los mismos lados que la curva (arriba y derecha), pero la curva es amplia (15 cm de radio).
+  lcorner: {
+    mask: N | E,
+    prims: () => pen(15, 0, DOWN).line(10).turn(5, -90).line(10).prims,
+  },
   // Y: tallo abajo; los brazos salen en diagonal y llegan rectos a los lados (los lados se unen por su centro).
   fork: {
     mask: S | E | W,

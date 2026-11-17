@@ -35,7 +35,7 @@ function drive(s: Scenario, id: string, secs = 45) {
   return { cm: sim.robot.odometer, onLine: near / (secs * 50), cells };
 }
 
-const NEW: TileType[] = ["fork", "deadend", "scurve", "detour", "bay", "gap"];
+const NEW: TileType[] = ["lcorner", "fork", "deadend", "scurve", "detour", "bay", "gap"];
 
 describe("conexiones de las piezas nuevas", () => {
   it("los lados conectados giran con la pieza (N→E→S→W)", () => {
@@ -44,6 +44,7 @@ describe("conexiones de las piezas nuevas", () => {
     expect(rotateMask(S | E | W, 2)).toBe(N | W | E);
     expect(tileMask("fork", 0)).toBe(S | E | W);
     expect(tileMask("deadend", 0)).toBe(S);
+    expect(tileMask("lcorner", 0)).toBe(N | E);
     for (const t of ["scurve", "detour", "bay", "gap"] as TileType[]) expect(tileMask(t, 0)).toBe(N | S);
   });
   it("en cada giro, hay línea justo en los lados conectados y en ningún otro", () => {
@@ -85,6 +86,15 @@ describe("un seguidor que recupera la línea recorre cada pieza en los dos senti
       });
     }
   }
+  it("esquina en L: vuelta con una L en cada esquina, en los dos sentidos", () => {
+    for (const heading of [0, Math.PI]) {
+      const s = withMargin([T(0, 0, "lcorner", 1), T(1, 0, "straight"), T(2, 0, "lcorner", 2), T(0, 1, "straight", 1), T(2, 1, "straight", 1), T(0, 2, "lcorner"), T(1, 2, "straight"), T(2, 2, "lcorner", 3)], 3, 3, { x: 45, y: 75, heading });
+      const r = drive(s, "seguidor-inteligente");
+      expect(r.onLine).toBeGreaterThan(0.97);
+      expect(r.cells.size).toBe(8);
+      expect(r.cm).toBeGreaterThan(500);
+    }
+  });
   it("bifurcación en Y: vuelta con un travesaño de Y a Y", () => {
     const s = withMargin([T(0, 0, "curve", 1), T(1, 0, "fork", 0), T(2, 0, "curve", 2), T(0, 1, "straight", 1), T(1, 1, "straight", 1), T(2, 1, "straight", 1), T(0, 2, "curve"), T(1, 2, "fork", 2), T(2, 2, "curve", 3)], 3, 3, { x: 15, y: 45, heading: Math.PI / 2 });
     const r = drive(s, "recuperar-linea");

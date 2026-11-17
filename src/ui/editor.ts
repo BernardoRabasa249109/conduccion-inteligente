@@ -54,6 +54,7 @@ const TILE_SVG: Record<TileType | "erase" | "uturn", string> = {
   cross: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h20M12 2v20" stroke="currentColor" stroke-width="3"/></svg>',
   roundabout: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M2 12h4.6M17.4 12H22" stroke="currentColor" stroke-width="3"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="2.1" fill="none" stroke="#c084fc" stroke-width="1.8"/></svg>',
   turnaround: '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3" fill="none" stroke="currentColor"/><path d="M12 2v4.6" stroke="currentColor" stroke-width="3"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="2.1" fill="none" stroke="#c084fc" stroke-width="1.8"/></svg>',
+  lcorner: penIcon("lcorner"),
   fork: penIcon("fork"),
   deadend: penIcon("deadend", '<rect x="16.5" y="16.5" width="3.6" height="3.6" fill="#2563eb"/><rect x="17" y="17" width="2.6" height="0.9" fill="#ef4444"/>'),
   scurve: penIcon("scurve"),

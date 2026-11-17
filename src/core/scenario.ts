@@ -4,14 +4,15 @@
  * (como en la vista superior). Los ángulos se miden desde +x hacia +y.
  */
 
-export type TileType = "straight" | "curve" | "tee" | "cross" | "roundabout" | "turnaround" | "fork" | "deadend" | "scurve" | "detour" | "bay" | "gap";
+export type TileType = "straight" | "curve" | "tee" | "cross" | "roundabout" | "turnaround" | "lcorner" | "fork" | "deadend" | "scurve" | "detour" | "bay" | "gap";
 
 /** Piezas de pista, en el orden de la paleta del editor. */
-export const TILE_TYPES: TileType[] = ["straight", "curve", "tee", "cross", "roundabout", "turnaround", "fork", "deadend", "scurve", "detour", "bay", "gap"];
+export const TILE_TYPES: TileType[] = ["straight", "curve", "lcorner", "tee", "cross", "roundabout", "turnaround", "fork", "deadend", "scurve", "detour", "bay", "gap"];
 /** Nombre de cada pieza en la interfaz. */
 export const TILE_NAME: Record<TileType, string> = {
   straight: "Recta",
   curve: "Curva",
+  lcorner: "Esquina en L",
   tee: "Cruce en T",
   cross: "Cruce",
   roundabout: "Glorieta",
