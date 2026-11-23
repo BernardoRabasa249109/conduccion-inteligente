@@ -67,6 +67,7 @@ export const SIGN_OPTIONS: [string, string][] = [
   ["estacionamiento 1", "p1"],
   ["estacionamiento 2", "p2"],
   ["alto*", "alto"],
+  ["persona*", "persona"],
 ];
 
 const STATE_OPTIONS: [string, string][] = STATES.map((s) => [STATE_NAME[s], s]);

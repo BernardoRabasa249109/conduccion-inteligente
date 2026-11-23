@@ -193,6 +193,12 @@ export function computeVision(world: World, r: RobotState, time: number): Vision
     if (st === "apagado") continue;
     consider(l.id, `semaforo_${st}` as VisionLabel, l.x, l.y, PROPS.lightCenter, l.facing, PROPS.lightBoxW * 0.9);
   }
+  // Personas (ampliación educativa: el ejemplo oficial del K210 solo reconoce señales).
+  // Una persona se reconoce desde cualquier lado: no tiene una cara que deba mirar a la cámara.
+  for (const o of world.obstacles()) {
+    if (o.shape !== "persona" || !world.isPresent(o)) continue;
+    consider(o.id, "persona", o.x, o.y, o.h * 0.55, Math.atan2(cam.y - o.y, cam.x - o.x), o.h / 4);
+  }
   const seen = candidates.filter((c) => c.status === "reconocida").sort((a, b) => (b.px?.size ?? 0) - (a.px?.size ?? 0));
   const best = seen[0] ?? null;
   return { label: best ? best.label : null, confidence: best ? best.confidence : 0, candidates };

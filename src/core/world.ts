@@ -152,6 +152,11 @@ export class World {
     return this.scenario.objects.filter((o): o is LightObject => o.kind === "light");
   }
 
+  /** ¿El círculo (cx, cy, r) toca este obstáculo? (Con un margen para contar el contacto.) */
+  touches(o: ObstacleObject, cx: number, cy: number, r: number): boolean {
+    return circleBox(cx, cy, r, { id: o.id, kind: "box", x: o.x, y: o.y, r: 0, w: o.w, d: o.d, rot: o.rot, h: o.h, label: "" });
+  }
+
   obstacles(): ObstacleObject[] {
     return this.scenario.objects.filter((o): o is ObstacleObject => o.kind === "obstacle");
   }

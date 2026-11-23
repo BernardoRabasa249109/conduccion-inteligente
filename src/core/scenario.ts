@@ -45,7 +45,7 @@ export type LightState = "rojo" | "amarillo" | "verde" | "apagado";
 export type LampColor = Exclude<LightState, "apagado">;
 
 /** Etiquetas que puede devolver la visión simulada. */
-export type VisionLabel = SignType | "semaforo_rojo" | "semaforo_verde" | "semaforo_amarillo";
+export type VisionLabel = SignType | "semaforo_rojo" | "semaforo_verde" | "semaforo_amarillo" | "persona";
 
 export const SIGN_INFO: Record<SignType, { name: string; official: boolean; meaning: string }> = {
   izquierda: { name: "Girar a la izquierda", official: true, meaning: "Preferir la izquierda en el siguiente cruce." },
@@ -70,6 +70,7 @@ export const VISION_LABEL_NAME: Record<VisionLabel, string> = {
   semaforo_rojo: "semáforo en rojo",
   semaforo_verde: "semáforo en verde",
   semaforo_amarillo: "semáforo en amarillo",
+  persona: "persona",
 };
 
 export interface SignObject {

@@ -41,8 +41,8 @@ Todas están en `src/core/config.ts`.
 | Línea negra | 2,4 cm de ancho, piezas de pista de 30 cm | Aproximación del tapete; ajustable. |
 | Ultrasonido | Cono de ±15° calculado de forma continua (sin huecos entre rayos). Cajas y personas se detectan en todo el cono; los postes delgados de señales y semáforos solo dentro de ±8° | Típico del HC-SR04: los objetos delgados devuelven poco eco fuera del eje. No modela ecos múltiples ni superficies blandas. |
 | Cámara | 12,5 cm de altura, 8° hacia abajo, campo horizontal de 60° | Estimado del montaje con el soporte. |
-| Reconocimiento | Se reconoce una señal si está dentro del campo, entre 7 y 55 cm, de frente (±55°), con al menos 22 px de tamaño aparente y sin nada delante. Se actualiza 10 veces por segundo y devuelve la más grande. | **No ejecuta el modelo K210.** La «confianza» es un número inventado a partir de distancia y ángulo. |
-| Choques | El chasis es un círculo de 5,6 cm; al tocar un objeto o el borde, el robot se bloquea | Sin rebotes ni empujes. |
+| Reconocimiento | Se reconoce una señal si está dentro del campo, entre 7 y 55 cm, de frente (±55°), con al menos 22 px de tamaño aparente y sin nada delante (una persona, igual pero desde cualquier lado). Se actualiza 10 veces por segundo y devuelve la más grande. | **No ejecuta el modelo K210.** La «confianza» es un número inventado a partir de distancia y ángulo. |
+| Choques | El chasis es un círculo de 5,6 cm; al tocar un objeto o el borde, el robot se bloquea | Sin rebotes ni empujes. Una persona cruza (desaparece) solo si el robot se detiene delante de ella 2 s **sin tocarla**; si la choca, se queda. |
 | Tiempo | Pasos fijos de 20 ms | Las esperas se redondean a múltiplos de 20 ms. |
 | Lecturas en pantalla | Se refrescan unas 8 veces por segundo y cada valor se mantiene un momento (por ejemplo, la señal reconocida al menos 0,6 s) | Para que se puedan leer sin parpadeos. El programa sigue recibiendo los datos exactos cada 20 ms; el panel «Lo que lee el programa» muestra esos datos. |
 | Modo avanzado | Ruido en sensores (bordes de línea, ±1,5 cm de distancia, una pérdida ocasional de la señal reconocida en el 5 % de las actualizaciones de visión) y retraso configurable | El modo inicial es determinista. |
@@ -50,6 +50,7 @@ Todas están en `src/core/config.ts`.
 ## 4. Ampliaciones educativas (no forman parte del equipo ni del ejemplo oficial)
 
 - Señal **«Alto»** y reconocimiento del semáforo en **amarillo** (marcados con * en los bloques).
+- Reconocimiento de **personas** («persona*» en el bloque «la cámara ve …»). El ejemplo oficial del K210 solo reconoce señales; para personas haría falta otro modelo en la tarjeta TF. En el simulador se reconoce con las mismas reglas de distancia, tamaño y oclusión que una señal, pero desde cualquier lado (una persona no tiene una cara que deba mirar a la cámara).
 - Bloques de **estados** (Seguir línea, Esperar, Girar, Estacionar, Recuperar línea). En MakeCode se traducen con variables y una función `cambiarEstado`.
 - Bloque **«anotar decisión»**: solo muestra texto en el simulador; se exporta como comentario.
 - **«obstáculo a menos de N cm»**: se exporta como una función que usa el ultrasonido oficial.

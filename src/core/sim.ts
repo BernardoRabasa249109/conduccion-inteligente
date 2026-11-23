@@ -152,6 +152,7 @@ export class Sim {
     this.lostSince = null;
     this.lostLogged = false;
     this.bumpedLogged = null;
+    this.touchedPeople.clear();
     this.log = [];
     this.refreshSensors();
     this.emit({ type: "reset" });
@@ -327,10 +328,25 @@ export class Sim {
     for (const fn of this.observers) fn(this);
   }
 
+  /** Personas que el robot está tocando (para avisar una sola vez por choque). */
+  private touchedPeople = new Set<string>();
+
   private updateObstacles(dt: number) {
     const speed = Math.abs(this.robot.vLeft) + Math.abs(this.robot.vRight);
+    const [cx, cy] = chassisCenter(this.robot);
     for (const o of this.world.obstacles()) {
       if (!o.leavesAfterStop || this.world.removed.has(o.id)) continue;
+      // Si el robot la choca, la persona no cruza: la espera vuelve a cero. Solo
+      // cruza cuando el robot se detiene antes de tocarla (por ejemplo, al retroceder y esperar).
+      if (this.world.touches(o, cx, cy, ROBOT.collisionRadius + 0.3)) {
+        this.world.waitedBy.set(o.id, 0);
+        if (!this.touchedPeople.has(o.id)) {
+          this.touchedPeople.add(o.id);
+          this.addLog("evento", "La persona no cruza mientras el robot la toca: hay que detenerse antes de llegar a ella");
+        }
+        continue;
+      }
+      this.touchedPeople.delete(o.id);
       const facing = this.now.sonarId === o.id && this.now.distance > 0 && this.now.distance < 35;
       if (facing && speed < 1) {
         const w = (this.world.waitedBy.get(o.id) ?? 0) + dt;
