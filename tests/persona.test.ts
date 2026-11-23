@@ -70,3 +70,27 @@ describe("chocar con una persona no la hace desaparecer", () => {
     expect(sim.world.removed.has("persona")).toBe(true);
   });
 });
+
+describe("en el editor de escenario las personas no aparecen ni desaparecen solas", () => {
+  it("mientras se edita, una persona delante del robot detenido no cruza", () => {
+    const sim = new Sim(scenario([persona(65, 45)]));
+    sim.setEditing(true);
+    tick(sim, 5);
+    expect(sim.world.removed.has("persona")).toBe(false);
+  });
+  it("al abrir el editor, vuelve la persona que ya había cruzado (es parte del escenario)", () => {
+    const sim = new Sim(scenario([persona(65, 45)]));
+    tick(sim, 3);
+    expect(sim.world.removed.has("persona")).toBe(true);
+    sim.setEditing(true);
+    expect(sim.world.removed.has("persona")).toBe(false);
+  });
+  it("al terminar de editar, la simulación sigue como siempre", () => {
+    const sim = new Sim(scenario([persona(65, 45)]));
+    sim.setEditing(true);
+    tick(sim, 3);
+    sim.setEditing(false);
+    tick(sim, 3);
+    expect(sim.world.removed.has("persona")).toBe(true);
+  });
+});

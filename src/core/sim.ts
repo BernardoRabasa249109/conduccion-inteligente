@@ -330,8 +330,22 @@ export class Sim {
 
   /** Personas que el robot está tocando (para avisar una sola vez por choque). */
   private touchedPeople = new Set<string>();
+  /** Editor de escenario abierto: se muestra el escenario tal como se diseña. */
+  private editing = false;
+
+  /**
+   * Al abrir el editor, las personas que ya cruzaron vuelven (son parte del
+   * escenario) y, mientras se edita, nadie cruza: no aparecen ni desaparecen solas.
+   */
+  setEditing(on: boolean) {
+    this.editing = on;
+    this.world.removed.clear();
+    this.world.waitedBy.clear();
+    this.touchedPeople.clear();
+  }
 
   private updateObstacles(dt: number) {
+    if (this.editing) return;
     const speed = Math.abs(this.robot.vLeft) + Math.abs(this.robot.vRight);
     const [cx, cy] = chassisCenter(this.robot);
     for (const o of this.world.obstacles()) {

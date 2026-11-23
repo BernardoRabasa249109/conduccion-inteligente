@@ -171,6 +171,7 @@ export class ScenarioEditor implements PointerDelegate {
 
   open() {
     this.isOpen = true;
+    this.app.sim.setEditing(true);
     this.goal = null;
     this.app.sim.stopProgram();
     this.app.sim.setMode("manual");
@@ -187,6 +188,7 @@ export class ScenarioEditor implements PointerDelegate {
   discard() {
     this.goal = null;
     this.isOpen = false;
+    this.app.sim.setEditing(false);
     this.press = null;
     this.select(null);
     this.app.scene.setHoverTile(null);
@@ -199,6 +201,7 @@ export class ScenarioEditor implements PointerDelegate {
     if (this.goal) this.applyPlace(this.goal.sel, this.goal.to);
     this.goal = null;
     this.isOpen = false;
+    this.app.sim.setEditing(false);
     this.press = null;
     this.select(null);
     this.app.scene.setHoverTile(null);
